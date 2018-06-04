@@ -24,31 +24,31 @@ import {
 
 import {log} from '../../shared'
 
-import {CreateBuchComponent} from './create-buch.component'
+import {CreateKundeComponent} from './create-kunde.component'
 
 @Injectable()
-export class CreateBuchGuard implements CanDeactivate<CreateBuchComponent> {
+export class CreateKundeGuard implements CanDeactivate<CreateKundeComponent> {
     constructor() {
-        console.log('CreateBuchGuard.constructor()')
+        console.log('CreateKundeGuard.constructor()')
     }
 
     @log
     canDeactivate(
-        createBuch: CreateBuchComponent,
+        createKunde: CreateKundeComponent,
         _: ActivatedRouteSnapshot,
         __: RouterStateSnapshot,
     ) {
-        if (createBuch.fertig) {
+        if (createKunde.fertig) {
             return true
         }
 
-        createBuch.showWarning = true
-        createBuch.fertig = true
+        createKunde.showWarning = true
+        createKunde.fertig = true
         console.warn('Beim Verlassen der Seite werden Daten verloren.')
         return false
     }
 
     toString() {
-        return 'CreateBuchGuard'
+        return 'CreateKundeGuard'
     }
 }
