@@ -88,7 +88,7 @@
                                 </span>
                             </td>
                             <td>
-                                <!-- Pfad detailsBuch/:id, in routes.ts -->
+                                <!-- Pfad detailsKunde/:id, in routes.ts -->
                                 <!-- modaler Dialog als Alternative: -->
                                 <!-- https://getbootstrap.com/docs/4.0/components/modal -->
                                 <a [routerLink]="['/details', b._id]"
@@ -110,10 +110,10 @@
                 <div [ngPlural]="buecher.length">
                     <!-- zu vergleichender Ausdruck -->
                     <ng-template ngPluralCase="=0">
-                        <i class="fas fa-info-circle"></i> Es gibt kein Buch
+                        <i class="fas fa-info-circle"></i> Es gibt keinen Kunden
                     </ng-template>
                     <ng-template ngPluralCase="=1">
-                        <i class="fas fa-info-circle"></i> Es gibt ein Buch
+                        <i class="fas fa-info-circle"></i> Es gibt einen Kunden
                     </ng-template>
                     <ng-template ngPluralCase="other">
                         <i class="fas fa-info-circle"></i>

@@ -31,20 +31,20 @@ export enum Verlag {
     HSKA_VERLAG = 'HSKA_VERLAG',
 }
 
-export enum BuchArt {
+export enum KundeArt {
     KINDLE = 'KINDLE',
     DRUCKAUSGABE = 'DRUCKAUSGABE',
 }
 
 /**
- * Gemeinsame Datenfelder unabh&auml;ngig, ob die Buchdaten von einem Server
+ * Gemeinsame Datenfelder unabh&auml;ngig, ob die Kundedaten von einem Server
  * (z.B. RESTful Web Service) oder von einem Formular kommen.
  */
-export interface BuchShared {
+export interface KundeShared {
     _id?: string
     titel?: string
     verlag?: Verlag
-    art?: BuchArt
+    art?: KundeArt
     preis?: number
     rabatt?: number
     datum?: string
@@ -69,7 +69,7 @@ interface SelfLink {
  *       String handhabbar sind.
  * </ul>
  */
-export interface BuchServer extends BuchShared {
+export interface KundeServer extends KundeShared {
     rating?: number
     schlagwoerter?: Array<string>
     links?: any
@@ -83,7 +83,7 @@ export interface BuchServer extends BuchShared {
  *  <li> au&szlig;erdem Strings f&uuml;r Eingabefelder f&uuml;r Zahlen.
  * </ul>
  */
-export interface BuchForm extends BuchShared {
+export interface KundeForm extends KundeShared {
     rating: string
     javascript?: boolean
     typescript?: boolean
@@ -93,7 +93,7 @@ export interface BuchForm extends BuchShared {
  * Model als Plain-Old-JavaScript-Object (POJO) fuer die Daten *UND*
  * Functions fuer Abfragen und Aenderungen.
  */
-export class Buch {
+export class Kunde {
     ratingArray: Array<boolean> = []
 
     // wird aufgerufen von fromServer() oder von fromForm()
@@ -102,7 +102,7 @@ export class Buch {
         public _id: string | undefined,
         public titel: string | undefined,
         public rating: number | undefined,
-        public art: BuchArt | undefined,
+        public art: KundeArt | undefined,
         public verlag: Verlag | undefined,
         public datum: moment.Moment | undefined,
         public preis: number | undefined,
@@ -135,19 +135,19 @@ export class Buch {
     }
 
     /**
-     * Ein Buch-Objekt mit JSON-Daten erzeugen, die von einem RESTful Web
+     * Ein Kunde-Objekt mit JSON-Daten erzeugen, die von einem RESTful Web
      * Service kommen.
-     * @param buch JSON-Objekt mit Daten vom RESTful Web Server
-     * @return Das initialisierte Buch-Objekt
+     * @param kunde JSON-Objekt mit Daten vom RESTful Web Server
+     * @return Das initialisierte Kunde-Objekt
      */
-    static fromServer(buchServer: BuchServer, etag?: string) {
+    static fromServer(kundeServer: KundeServer, etag?: string) {
         let selfLink: string | undefined
-        if (buchServer.links !== undefined) {
+        if (kundeServer.links !== undefined) {
             // innerhalb von einem JSON-Array
-            selfLink = buchServer.links[1].href
-        } else if (buchServer._links !== undefined) {
+            selfLink = kundeServer.links[1].href
+        } else if (kundeServer._links !== undefined) {
             // ein einzelnes JSON-Objekt
-            selfLink = buchServer._links.self.href
+            selfLink = kundeServer._links.self.href
         }
         let id: string | undefined
         if (selfLink !== undefined) {
@@ -163,62 +163,62 @@ export class Buch {
         }
 
         let datum: moment.Moment | undefined
-        if (buchServer.datum !== undefined) {
-            datum = moment(buchServer.datum)
+        if (kundeServer.datum !== undefined) {
+            datum = moment(kundeServer.datum)
         }
 
-        const buch = new Buch(
+        const kunde = new Kunde(
             id,
-            buchServer.titel,
-            buchServer.rating,
-            buchServer.art,
-            buchServer.verlag,
+            kundeServer.titel,
+            kundeServer.rating,
+            kundeServer.art,
+            kundeServer.verlag,
             datum,
-            buchServer.preis,
-            buchServer.rabatt,
-            buchServer.lieferbar,
-            buchServer.schlagwoerter,
-            buchServer.email,
+            kundeServer.preis,
+            kundeServer.rabatt,
+            kundeServer.lieferbar,
+            kundeServer.schlagwoerter,
+            kundeServer.email,
             version,
         )
-        console.log('Buch.fromServer(): buch=', buch)
-        return buch
+        console.log('Kunde.fromServer(): kunde=', kunde)
+        return kunde
     }
 
     /**
-     * Ein Buch-Objekt mit JSON-Daten erzeugen, die von einem Formular kommen.
-     * @param buch JSON-Objekt mit Daten vom Formular
-     * @return Das initialisierte Buch-Objekt
+     * Ein Kunde-Objekt mit JSON-Daten erzeugen, die von einem Formular kommen.
+     * @param kunde JSON-Objekt mit Daten vom Formular
+     * @return Das initialisierte Kunde-Objekt
      */
-    static fromForm(buchForm: BuchForm) {
+    static fromForm(kundeForm: KundeForm) {
         const schlagwoerter: Array<string> = []
-        if (buchForm.javascript === true) {
+        if (kundeForm.javascript === true) {
             schlagwoerter.push('JAVASCRIPT')
         }
-        if (buchForm.typescript === true) {
+        if (kundeForm.typescript === true) {
             schlagwoerter.push('TYPESCRIPT')
         }
 
         const datumMoment =
-            buchForm.datum === undefined ? undefined : moment(buchForm.datum)
+            kundeForm.datum === undefined ? undefined : moment(kundeForm.datum)
 
-        const rabatt = buchForm.rabatt === undefined ? 0 : buchForm.rabatt / 100
-        const buch = new Buch(
-            buchForm._id,
-            buchForm.titel,
-            +buchForm.rating,
-            buchForm.art,
-            buchForm.verlag,
+        const rabatt = kundeForm.rabatt === undefined ? 0 : kundeForm.rabatt / 100
+        const kunde = new Kunde(
+            kundeForm._id,
+            kundeForm.titel,
+            +kundeForm.rating,
+            kundeForm.art,
+            kundeForm.verlag,
             datumMoment,
-            buchForm.preis,
+            kundeForm.preis,
             rabatt,
-            buchForm.lieferbar,
+            kundeForm.lieferbar,
             schlagwoerter,
-            buchForm.email,
-            buchForm.version,
+            kundeForm.email,
+            kundeForm.version,
         )
-        console.log('Buch.fromForm(): buch=', buch)
-        return buch
+        console.log('Kunde.fromForm(): kunde=', kunde)
+        return kunde
     }
 
     // http://momentjs.com
@@ -233,10 +233,10 @@ export class Buch {
     }
 
     /**
-     * Abfrage, ob im Buchtitel der angegebene Teilstring enthalten ist. Dabei
+     * Abfrage, ob im Kundetitel der angegebene Teilstring enthalten ist. Dabei
      * wird nicht auf Gross-/Kleinschreibung geachtet.
      * @param titel Zu &uuml;berpr&uuml;fender Teilstring
-     * @return true, falls der Teilstring im Buchtitel enthalten ist. Sonst
+     * @return true, falls der Teilstring im Kundetitel enthalten ist. Sonst
      *         false.
      */
     containsTitel(titel: string) {
@@ -246,7 +246,7 @@ export class Buch {
     }
 
     /**
-     * Die Bewertung ("rating") des Buches um 1 erh&ouml;hen
+     * Die Bewertung ("rating") des Kundees um 1 erh&ouml;hen
      */
     rateUp() {
         if (this.rating !== undefined && this.rating < MAX_RATING) {
@@ -255,7 +255,7 @@ export class Buch {
     }
 
     /**
-     * Die Bewertung ("rating") des Buches um 1 erniedrigen
+     * Die Bewertung ("rating") des Kundees um 1 erniedrigen
      */
     rateDown() {
         if (this.rating !== undefined && this.rating > MIN_RATING) {
@@ -264,26 +264,26 @@ export class Buch {
     }
 
     /**
-     * Abfrage, ob das Buch dem angegebenen Verlag zugeordnet ist.
+     * Abfrage, ob das Kunde dem angegebenen Verlag zugeordnet ist.
      * @param verlag der Name des Verlags
-     * @return true, falls das Buch dem Verlag zugeordnet ist. Sonst false.
+     * @return true, falls das Kunde dem Verlag zugeordnet ist. Sonst false.
      */
     hasVerlag(verlag: string) {
         return this.verlag === verlag
     }
 
     /**
-     * Aktualisierung der Stammdaten des Buch-Objekts.
-     * @param titel Der neue Buchtitel
+     * Aktualisierung der Stammdaten des Kunde-Objekts.
+     * @param titel Der neue Kundetitel
      * @param rating Die neue Bewertung
-     * @param art Die neue Buchart (DRUCKAUSGABE oder KINDLE)
+     * @param art Die neue Kundeart (DRUCKAUSGABE oder KINDLE)
      * @param verlag Der neue Verlag
      * @param preis Der neue Preis
      * @param rabatt Der neue Rabatt
      */
     updateStammdaten(
         titel: string,
-        art: BuchArt,
+        art: KundeArt,
         verlag: Verlag,
         rating: number,
         datum: moment.Moment | undefined,
@@ -302,7 +302,7 @@ export class Buch {
     }
 
     /**
-     * Abfrage, ob es zum Buch auch Schlagw&ouml;rter gibt.
+     * Abfrage, ob es zum Kunde auch Schlagw&ouml;rter gibt.
      * @return true, falls es mindestens ein Schlagwort gibt. Sonst false.
      */
     hasSchlagwoerter() {
@@ -313,7 +313,7 @@ export class Buch {
     }
 
     /**
-     * Abfrage, ob es zum Buch das angegebene Schlagwort gibt.
+     * Abfrage, ob es zum Kunde das angegebene Schlagwort gibt.
      * @param schlagwort das zu &uuml;berpr&uuml;fende Schlagwort
      * @return true, falls es das Schlagwort gibt. Sonst false.
      */
@@ -325,7 +325,7 @@ export class Buch {
     }
 
     /**
-     * Aktualisierung der Schlagw&ouml;rter des Buch-Objekts.
+     * Aktualisierung der Schlagw&ouml;rter des Kunde-Objekts.
      * @param javascript ist das Schlagwort JAVASCRIPT gesetzt
      * @param typescript ist das Schlagwort TYPESCRIPT gesetzt
      */
@@ -340,11 +340,11 @@ export class Buch {
     }
 
     /**
-     * Konvertierung des Buchobjektes in ein JSON-Objekt f&uuml;r den RESTful
+     * Konvertierung des Kundeobjektes in ein JSON-Objekt f&uuml;r den RESTful
      * Web Service.
      * @return Das JSON-Objekt f&uuml;r den RESTful Web Service
      */
-    toJSON(): BuchServer {
+    toJSON(): KundeServer {
         const datum =
             this.datum === undefined
                 ? undefined

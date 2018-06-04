@@ -21,8 +21,8 @@ import {Router} from '@angular/router'
 
 import {HOME_PATH} from '../../app/routes'
 import {log} from '../../shared'
-import {Buch} from '../shared/buch'
-import {BuchService} from '../shared/buch.service'
+import {Kunde} from '../shared/kunde'
+import {KundeService} from '../shared/kunde.service'
 
 /**
  * Komponente f&uuml;r das Tag <code>hs-schlagwoerter</code>
@@ -32,8 +32,8 @@ import {BuchService} from '../shared/buch.service'
     templateUrl: './update-schlagwoerter.html',
 })
 export class UpdateSchlagwoerterComponent implements OnInit {
-    // <hs-schlagwoerter [buch]="...">
-    @Input() buch!: Buch
+    // <hs-schlagwoerter [kunde]="...">
+    @Input() kunde!: Kunde
 
     form!: FormGroup
     javascript!: FormControl
@@ -41,7 +41,7 @@ export class UpdateSchlagwoerterComponent implements OnInit {
 
     constructor(
         private readonly formBuilder: FormBuilder,
-        private readonly buchService: BuchService,
+        private readonly kundeService: KundeService,
         private readonly router: Router,
     ) {
         console.log('UpdateSchlagwoerterComponent.constructor()')
@@ -49,16 +49,16 @@ export class UpdateSchlagwoerterComponent implements OnInit {
 
     /**
      * Das Formular als Gruppe von Controls initialisieren und mit den
-     * Schlagwoertern des zu &auml;ndernden Buchs vorbelegen.
+     * Schlagwoertern des zu &auml;ndernden Kundes vorbelegen.
      */
     @log
     ngOnInit() {
-        console.log('buch=', this.buch)
+        console.log('kunde=', this.kunde)
 
         // Definition und Vorbelegung der Eingabedaten (hier: Checkbox)
-        const hasJavaScript = this.buch.hasSchlagwort('JAVASCRIPT')
+        const hasJavaScript = this.kunde.hasSchlagwort('JAVASCRIPT')
         this.javascript = new FormControl(hasJavaScript)
-        const hasTypeScript = this.buch.hasSchlagwort('TYPESCRIPT')
+        const hasTypeScript = this.kunde.hasSchlagwort('TYPESCRIPT')
         this.typescript = new FormControl(hasTypeScript)
 
         this.form = this.formBuilder.group({
@@ -69,7 +69,7 @@ export class UpdateSchlagwoerterComponent implements OnInit {
     }
 
     /**
-     * Die aktuellen Schlagwoerter f&uuml;r das angezeigte Buch-Objekt
+     * Die aktuellen Schlagwoerter f&uuml;r das angezeigte Kunde-Objekt
      * zur&uuml;ckschreiben.
      * @return false, um das durch den Button-Klick ausgel&ouml;ste Ereignis
      *         zu konsumieren.
@@ -81,16 +81,16 @@ export class UpdateSchlagwoerterComponent implements OnInit {
             return undefined
         }
 
-        if (this.buch === undefined) {
-            console.error('buch === undefined')
+        if (this.kunde === undefined) {
+            console.error('kunde === undefined')
             return undefined
         }
 
-        this.buch.updateSchlagwoerter(
+        this.kunde.updateSchlagwoerter(
             this.javascript.value,
             this.typescript.value,
         )
-        console.log('buch=', this.buch)
+        console.log('kunde=', this.kunde)
 
         const successFn = () => {
             console.log(
@@ -110,7 +110,7 @@ export class UpdateSchlagwoerterComponent implements OnInit {
                 errors,
             )
         }
-        this.buchService.update(this.buch, successFn, errFn)
+        this.kundeService.update(this.kunde, successFn, errFn)
 
         // damit das (Submit-) Ereignis konsumiert wird und nicht an
         // uebergeordnete Eltern-Komponenten propagiert wird bis zum

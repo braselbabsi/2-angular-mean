@@ -36,7 +36,7 @@ import {BASE_URI, log, PATH_BUECHER} from '../../shared'
 // Aus SharedModule als Singleton exportiert
 import {DiagrammService} from '../../shared/diagramm.service'
 
-import {Buch, BuchForm, BuchServer} from './buch'
+import {Kunde, KundeForm, KundeServer} from './kunde'
 
 // Methoden der Klasse HttpClient
 //  * get(url, options) – HTTP GET request
@@ -55,13 +55,13 @@ import {Buch, BuchForm, BuchServer} from './buch'
  * Die Service-Klasse zu B&uuml;cher.
  */
 @Injectable()
-export class BuchService {
+export class KundeService {
     private baseUriBuecher: string
-    private buecherEmitter = new EventEmitter<Array<Buch>>()
-    private buchEmitter = new EventEmitter<Buch>()
+    private buecherEmitter = new EventEmitter<Array<Kunde>>()
+    private kundeEmitter = new EventEmitter<Kunde>()
     private errorEmitter = new EventEmitter<string | number>()
     // tslint:disable-next-line:variable-name
-    private _buch!: Buch
+    private _kunde!: Kunde
 
     private headers = new HttpHeaders({
         'Content-Type': 'application/json',
@@ -80,22 +80,22 @@ export class BuchService {
     ) {
         this.baseUriBuecher = `${BASE_URI}${PATH_BUECHER}`
         console.log(
-            `BuchService.constructor(): baseUriBuch=${this.baseUriBuecher}`,
+            `KundeService.constructor(): baseUriKunde=${this.baseUriBuecher}`,
         )
     }
 
     /**
-     * Ein Buch-Objekt puffern.
-     * @param buch Das Buch-Objekt, das gepuffert wird.
+     * Ein Kunde-Objekt puffern.
+     * @param kunde Das Kunde-Objekt, das gepuffert wird.
      * @return void
      */
-    set buch(buch: Buch) {
-        console.log('BuchService.set buch()', buch)
-        this._buch = buch
+    set kunde(kunde: Kunde) {
+        console.log('KundeService.set kunde()', kunde)
+        this._kunde = kunde
     }
 
     @log
-    observeBuecher(next: (buecher: Array<Buch>) => void) {
+    observeBuecher(next: (buecher: Array<Kunde>) => void) {
         // Observable.subscribe() aus RxJS liefert ein Subscription Objekt,
         // mit dem man den Request auch abbrechen ("cancel") kann
         // tslint:disable:max-line-length
@@ -107,8 +107,8 @@ export class BuchService {
     }
 
     @log
-    observeBuch(next: (buch: Buch) => void) {
-        return this.buchEmitter.subscribe(next)
+    observeKunde(next: (kunde: Kunde) => void) {
+        return this.kundeEmitter.subscribe(next)
     }
 
     @log
@@ -121,15 +121,15 @@ export class BuchService {
      * @param suchkriterien Die Suchkriterien
      */
     @log
-    find(suchkriterien: BuchForm) {
+    find(suchkriterien: KundeForm) {
         const params = this.suchkriterienToHttpParams(suchkriterien)
         const uri = this.baseUriBuecher
-        console.log(`BuchService.find(): uri=${uri}`)
+        console.log(`KundeService.find(): uri=${uri}`)
 
         // Statuscode 2xx
-        const nextFn: (response: Array<BuchServer>) => void = response => {
+        const nextFn: (response: Array<KundeServer>) => void = response => {
             const buecher = response.map(jsonObjekt =>
-                Buch.fromServer(jsonObjekt),
+                Kunde.fromServer(jsonObjekt),
             )
             this.buecherEmitter.emit(buecher)
         }
@@ -143,7 +143,7 @@ export class BuchService {
 
             const {status} = err
             console.log(
-                `BuchService.find(): errorFn(): status=${status}, ` +
+                `KundeService.find(): errorFn(): status=${status}, ` +
                     'Response-Body=',
                 err.error,
             )
@@ -159,7 +159,7 @@ export class BuchService {
         // https://xgrommx.github.io/rx-book/content/observable/observable_instance_methods/subscribe.html
         // tslint:enable:max-line-length
         this.httpClient
-            .get<Array<BuchServer>>(uri, {params})
+            .get<Array<KundeServer>>(uri, {params})
             .subscribe(nextFn, errorFn)
 
         // Same-Origin-Policy verhindert Ajax-Datenabfragen an einen Server in
@@ -169,23 +169,23 @@ export class BuchService {
     }
 
     /**
-     * Ein Buch anhand der ID suchen
-     * @param id Die ID des gesuchten Buchs
+     * Ein Kunde anhand der ID suchen
+     * @param id Die ID des gesuchten Kundes
      */
     @log
     findById(id: string) {
-        // Gibt es ein gepuffertes Buch mit der gesuchten ID und Versionsnr.?
+        // Gibt es ein gepuffertes Kunde mit der gesuchten ID und Versionsnr.?
         if (
-            this._buch !== undefined &&
-            this._buch._id === id &&
-            this._buch.version !== undefined
+            this._kunde !== undefined &&
+            this._kunde._id === id &&
+            this._kunde.version !== undefined
         ) {
-            console.log('BuchService.findById(): Buch gepuffert')
-            this.buchEmitter.emit(this._buch)
+            console.log('KundeService.findById(): Kunde gepuffert')
+            this.kundeEmitter.emit(this._kunde)
             return
         }
         if (id === undefined) {
-            console.log('BuchService.findById(): Keine Id')
+            console.log('KundeService.findById(): Keine Id')
             return
         }
 
@@ -194,26 +194,26 @@ export class BuchService {
 
         // Statuscode 2xx
         const nextFn: ((
-            response: HttpResponse<BuchServer>,
+            response: HttpResponse<KundeServer>,
         ) => void) = response => {
             const {headers, body} = response
             const etag = headers.get('ETag')
-            console.debug(`BuchService.findById(): nextFn(): ETag=${etag}`)
+            console.debug(`KundeService.findById(): nextFn(): ETag=${etag}`)
 
             if (body === null || etag === null) {
                 console.error('Response-Body oder ETag ist null')
                 return
             }
 
-            this._buch = Buch.fromServer(body, etag)
-            console.debug('BuchService.findById(): nextFn():', this._buch)
-            this.buchEmitter.emit(this._buch)
+            this._kunde = Kunde.fromServer(body, etag)
+            console.debug('KundeService.findById(): nextFn():', this._kunde)
+            this.kundeEmitter.emit(this._kunde)
         }
 
         const errorFn: (err: HttpErrorResponse) => void = err => {
             if (err.error instanceof ProgressEvent) {
                 console.error(
-                    'BuchService.findById(): errorFn(): Client- oder Netzwerkfehler',
+                    'KundeService.findById(): errorFn(): Client- oder Netzwerkfehler',
                     err.error,
                 )
                 this.errorEmitter.emit(-1)
@@ -222,45 +222,45 @@ export class BuchService {
 
             const {status} = err
             console.log(
-                `BuchService.findById(): errorFn(): status=${status}` +
+                `KundeService.findById(): errorFn(): status=${status}` +
                     `Response-Body=${err.error}`,
             )
             this.errorEmitter.emit(status)
         }
 
-        console.log('BuchService.findById(): GET-Request')
+        console.log('KundeService.findById(): GET-Request')
         this.httpClient
-            .get<BuchServer>(uri, {observe: 'response'})
+            .get<KundeServer>(uri, {observe: 'response'})
             .subscribe(nextFn, errorFn)
     }
 
     /**
-     * Ein neues Buch anlegen
-     * @param neuesBuch Das JSON-Objekt mit dem neuen Buch
+     * Ein neues Kunde anlegen
+     * @param neuesKunde Das JSON-Objekt mit dem neuen Kunde
      * @param successFn Die Callback-Function fuer den Erfolgsfall
      * @param errorFn Die Callback-Function fuer den Fehlerfall
      */
     @log
     save(
-        neuesBuch: Buch,
+        neuesKunde: Kunde,
         successFn: (location: string | undefined) => void,
         errorFn: (status: number, errors: {[s: string]: any}) => void,
     ) {
         // Alternative:date-fns
-        neuesBuch.datum = moment(new Date())
+        neuesKunde.datum = moment(new Date())
 
         const nextFn: ((response: HttpResponse<string>) => void) = response => {
-            console.debug('BuchService.save(): nextFn(): response', response)
+            console.debug('KundeService.save(): nextFn(): response', response)
             const {headers} = response
             const location = headers.get('Location') || undefined
-            console.log('BuchService.save(): nextFn(): location', location)
+            console.log('KundeService.save(): nextFn(): location', location)
             successFn(location)
         }
         // async. Error-Callback statt sync. try/catch
         const errorFnPost: ((err: HttpErrorResponse) => void) = err => {
             if (err.error instanceof Error) {
                 console.error(
-                    'BuchService.save(): errorFnPost(): Client- oder Netzwerkfehler',
+                    'KundeService.save(): errorFnPost(): Client- oder Netzwerkfehler',
                     err.error.message,
                 )
             } else {
@@ -274,7 +274,7 @@ export class BuchService {
         }
 
         this.httpClient
-            .post(this.baseUriBuecher, neuesBuch, {
+            .post(this.baseUriBuecher, neuesKunde, {
                 headers: this.headers,
                 observe: 'response',
                 responseType: 'text',
@@ -283,23 +283,23 @@ export class BuchService {
     }
 
     /**
-     * Ein vorhandenes Buch aktualisieren
-     * @param buch Das JSON-Objekt mit den aktualisierten Buchdaten
+     * Ein vorhandenes Kunde aktualisieren
+     * @param kunde Das JSON-Objekt mit den aktualisierten Kundedaten
      * @param successFn Die Callback-Function fuer den Erfolgsfall
      * @param errorFn Die Callback-Function fuer den Fehlerfall
      */
     @log
     update(
-        buch: Buch,
+        kunde: Kunde,
         successFn: () => void,
         errorFn: (
             status: number,
             errors: {[s: string]: any} | undefined,
         ) => void,
     ) {
-        const {version} = buch
+        const {version} = kunde
         if (version === undefined) {
-            console.error(`Keine Versionsnummer fuer das Buch ${buch._id}`)
+            console.error(`Keine Versionsnummer fuer das Kunde ${kunde._id}`)
             return
         }
         const errorFnPut: ((err: HttpErrorResponse) => void) = err => {
@@ -317,27 +317,27 @@ export class BuchService {
             }
         }
 
-        const uri = `${this.baseUriBuecher}/${buch._id}`
+        const uri = `${this.baseUriBuecher}/${kunde._id}`
         this.headers = this.headers.append('If-Match', version.toString())
         console.log('headers=', this.headers)
         this.httpClient
-            .put(uri, buch, {headers: this.headers})
+            .put(uri, kunde, {headers: this.headers})
             .subscribe(successFn, errorFnPut)
     }
 
     /**
-     * Ein Buch l&ouml;schen
-     * @param buch Das JSON-Objekt mit dem zu loeschenden Buch
+     * Ein Kunde l&ouml;schen
+     * @param kunde Das JSON-Objekt mit dem zu loeschenden Kunde
      * @param successFn Die Callback-Function fuer den Erfolgsfall
      * @param errorFn Die Callback-Function fuer den Fehlerfall
      */
     @log
     remove(
-        buch: Buch,
+        kunde: Kunde,
         successFn: () => void | undefined,
         errorFn: (status: number) => void,
     ) {
-        const uri = `${this.baseUriBuecher}/${buch._id}`
+        const uri = `${this.baseUriBuecher}/${kunde._id}`
 
         const errorFnDelete: ((err: HttpErrorResponse) => void) = err => {
             if (err.error instanceof Error) {
@@ -382,10 +382,10 @@ export class BuchService {
     @log
     createBarChart(chartElement: HTMLCanvasElement) {
         const uri = this.baseUriBuecher
-        const nextFn: ((buecher: Array<BuchServer>) => void) = buecher => {
-            const labels = buecher.map(buch => this.setBuchId(buch))
-            console.log('BuchService.createBarChart(): labels: ', labels)
-            const ratingData = buecher.map(buch => buch.rating) as Array<number>
+        const nextFn: ((buecher: Array<KundeServer>) => void) = buecher => {
+            const labels = buecher.map(kunde => this.setKundeId(kunde))
+            console.log('KundeService.createBarChart(): labels: ', labels)
+            const ratingData = buecher.map(kunde => kunde.rating) as Array<number>
 
             // Alternativen zu Chart.js:
             // D3:            https://d3js.org
@@ -403,7 +403,7 @@ export class BuchService {
             this.diagrammService.createChart(chartElement, config)
         }
 
-        this.httpClient.get<Array<BuchServer>>(uri).subscribe(nextFn)
+        this.httpClient.get<Array<KundeServer>>(uri).subscribe(nextFn)
     }
 
     /**
@@ -414,10 +414,10 @@ export class BuchService {
     @log
     createLinearChart(chartElement: HTMLCanvasElement) {
         const uri = this.baseUriBuecher
-        const nextFn: ((buecher: Array<BuchServer>) => void) = buecher => {
-            const labels = buecher.map(buch => this.setBuchId(buch))
-            console.log('BuchService.createLinearChart(): labels: ', labels)
-            const ratingData = buecher.map(buch => buch.rating) as Array<number>
+        const nextFn: ((buecher: Array<KundeServer>) => void) = buecher => {
+            const labels = buecher.map(kunde => this.setKundeId(kunde))
+            console.log('KundeService.createLinearChart(): labels: ', labels)
+            const ratingData = buecher.map(kunde => kunde.rating) as Array<number>
 
             const datasets: Array<ChartDataSets> = [
                 {label: 'Bewertung', data: ratingData},
@@ -431,7 +431,7 @@ export class BuchService {
             this.diagrammService.createChart(chartElement, config)
         }
 
-        this.httpClient.get<Array<BuchServer>>(uri).subscribe(nextFn)
+        this.httpClient.get<Array<KundeServer>>(uri).subscribe(nextFn)
     }
 
     /**
@@ -442,10 +442,10 @@ export class BuchService {
     @log
     createPieChart(chartElement: HTMLCanvasElement) {
         const uri = this.baseUriBuecher
-        const nextFn: ((buecher: Array<BuchServer>) => void) = buecher => {
-            const labels = buecher.map(buch => this.setBuchId(buch))
-            console.log('BuchService.createLinearChart(): labels: ', labels)
-            const ratingData = buecher.map(buch => buch.rating) as Array<number>
+        const nextFn: ((buecher: Array<KundeServer>) => void) = buecher => {
+            const labels = buecher.map(kunde => this.setKundeId(kunde))
+            console.log('KundeService.createLinearChart(): labels: ', labels)
+            const ratingData = buecher.map(kunde => kunde.rating) as Array<number>
 
             const anzahl = ratingData.length
             const backgroundColor = new Array<string>(anzahl)
@@ -472,11 +472,11 @@ export class BuchService {
             this.diagrammService.createChart(chartElement, config)
         }
 
-        this.httpClient.get<Array<BuchServer>>(uri).subscribe(nextFn)
+        this.httpClient.get<Array<KundeServer>>(uri).subscribe(nextFn)
     }
 
     toString() {
-        return `BuchService: {buch: ${JSON.stringify(this._buch, null, 2)}}`
+        return `KundeService: {kunde: ${JSON.stringify(this._kunde, null, 2)}}`
     }
 
     /**
@@ -485,7 +485,7 @@ export class BuchService {
      * @return Parameter fuer den GET-Request
      */
     @log
-    private suchkriterienToHttpParams(suchkriterien: BuchForm): HttpParams {
+    private suchkriterienToHttpParams(suchkriterien: KundeForm): HttpParams {
         let httpParams = new HttpParams()
 
         if (suchkriterien.titel !== undefined && suchkriterien.titel !== '') {
@@ -515,15 +515,15 @@ export class BuchService {
         return httpParams
     }
 
-    private setBuchId(buch: BuchServer) {
-        const selfLink = buch.links[1].href
+    private setKundeId(kunde: KundeServer) {
+        const selfLink = kunde.links[1].href
         if (selfLink !== undefined) {
             const lastSlash = selfLink.lastIndexOf('/')
-            buch._id = selfLink.substring(lastSlash + 1)
+            kunde._id = selfLink.substring(lastSlash + 1)
         }
-        if (buch._id === undefined) {
-            buch._id = 'undefined'
+        if (kunde._id === undefined) {
+            kunde._id = 'undefined'
         }
-        return buch._id
+        return kunde._id
     }
 }

@@ -19,7 +19,7 @@ import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core'
 import {Title} from '@angular/platform-browser'
 
 import {log} from '../../shared'
-import {BuchService} from '../shared/buch.service'
+import {KundeService} from '../shared/kunde.service'
 
 /**
  * Komponente mit dem Tag &lt;hs-tortendiagramm&gt; zur Visualisierung
@@ -33,7 +33,7 @@ export class TortendiagrammComponent implements AfterViewInit {
     @ViewChild('chartCanvas') chartCanvas!: ElementRef
 
     constructor(
-        private readonly buchService: BuchService,
+        private readonly kundeService: KundeService,
         private readonly titleService: Title,
     ) {
         console.log('TortendiagrammComponent.constructor()')
@@ -47,7 +47,7 @@ export class TortendiagrammComponent implements AfterViewInit {
     @log
     ngAfterViewInit() {
         const chartElement: HTMLCanvasElement = this.chartCanvas.nativeElement
-        this.buchService.createPieChart(chartElement)
+        this.kundeService.createPieChart(chartElement)
         this.titleService.setTitle('Tortendiagramm')
     }
 

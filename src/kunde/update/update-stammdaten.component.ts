@@ -21,8 +21,8 @@ import {Router} from '@angular/router'
 
 import {HOME_PATH} from '../../app/routes'
 import {log} from '../../shared'
-import {Buch} from '../shared/buch'
-import {BuchService} from '../shared/buch.service'
+import {Kunde} from '../shared/kunde'
+import {KundeService} from '../shared/kunde.service'
 
 /**
  * Komponente f&uuml;r das Tag <code>hs-stammdaten</code>
@@ -32,8 +32,8 @@ import {BuchService} from '../shared/buch.service'
     templateUrl: './update-stammdaten.html',
 })
 export class UpdateStammdatenComponent implements OnInit {
-    // <hs-update-stammdaten [buch]="...">
-    @Input() buch!: Buch
+    // <hs-update-stammdaten [kunde]="...">
+    @Input() kunde!: Kunde
 
     form!: FormGroup
     titel!: FormControl
@@ -43,7 +43,7 @@ export class UpdateStammdatenComponent implements OnInit {
 
     constructor(
         private readonly formBuilder: FormBuilder,
-        private readonly buchService: BuchService,
+        private readonly kundeService: KundeService,
         private readonly router: Router,
     ) {
         console.log('UpdateStammdatenComponent.constructor()')
@@ -51,25 +51,25 @@ export class UpdateStammdatenComponent implements OnInit {
 
     /**
      * Das Formular als Gruppe von Controls initialisieren und mit den
-     * Stammdaten des zu &auml;ndernden Buchs vorbelegen.
+     * Stammdaten des zu &auml;ndernden Kundes vorbelegen.
      */
     @log
     ngOnInit() {
-        console.log('buch=', this.buch)
+        console.log('kunde=', this.kunde)
 
         // Definition und Vorbelegung der Eingabedaten
         this.titel = new FormControl(
-            this.buch.titel,
+            this.kunde.titel,
             Validators.compose([
                 Validators.required,
                 Validators.minLength(2),
                 Validators.pattern(/^\w.*$/),
             ]),
         )
-        this.art = new FormControl(this.buch.art, Validators.required)
-        this.verlag = new FormControl(this.buch.verlag)
-        this.rating = new FormControl(this.buch.rating)
-        // this.datum = new Control(this.buch.datum.toISOString())
+        this.art = new FormControl(this.kunde.art, Validators.required)
+        this.verlag = new FormControl(this.kunde.verlag)
+        this.rating = new FormControl(this.kunde.rating)
+        // this.datum = new Control(this.kunde.datum.toISOString())
 
         this.form = this.formBuilder.group({
             // siehe formControlName innerhalb von @Component({template: ...})
@@ -82,7 +82,7 @@ export class UpdateStammdatenComponent implements OnInit {
     }
 
     /**
-     * Die aktuellen Stammdaten f&uuml;r das angezeigte Buch-Objekt
+     * Die aktuellen Stammdaten f&uuml;r das angezeigte Kunde-Objekt
      * zur&uuml;ckschreiben.
      * @return false, um das durch den Button-Klick ausgel&ouml;ste Ereignis
      *         zu konsumieren.
@@ -94,22 +94,22 @@ export class UpdateStammdatenComponent implements OnInit {
             return undefined
         }
 
-        if (this.buch === undefined) {
-            console.error('buch === undefined')
+        if (this.kunde === undefined) {
+            console.error('kunde === undefined')
             return undefined
         }
 
         // rating, preis und rabatt koennen im Formular nicht geaendert werden
-        this.buch.updateStammdaten(
+        this.kunde.updateStammdaten(
             this.titel.value,
             this.art.value,
             this.verlag.value,
             this.rating.value,
-            this.buch.datum,
-            this.buch.preis,
-            this.buch.rabatt,
+            this.kunde.datum,
+            this.kunde.preis,
+            this.kunde.rabatt,
         )
-        console.log('buch=', this.buch)
+        console.log('kunde=', this.kunde)
 
         const successFn = () => {
             console.log(`UpdateStammdaten: successFn: path: ${HOME_PATH}`)
@@ -128,7 +128,7 @@ export class UpdateStammdatenComponent implements OnInit {
             )
         }
 
-        this.buchService.update(this.buch, successFn, errFn)
+        this.kundeService.update(this.kunde, successFn, errFn)
 
         // damit das (Submit-) Ereignis konsumiert wird und nicht an
         // uebergeordnete Eltern-Komponenten propagiert wird bis zum

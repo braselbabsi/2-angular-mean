@@ -18,8 +18,8 @@
 import {Component, EventEmitter, Output} from '@angular/core'
 
 import {fadeIn, log} from '../../shared'
-import {BuchArt, Verlag} from '../shared/buch'
-import {BuchService} from '../shared/buch.service'
+import {KundeArt, Verlag} from '../shared/kunde'
+import {KundeService} from '../shared/kunde.service'
 
 /**
  * Komponente f&uuml;r das Tag <code>hs-suchformular</code>
@@ -32,7 +32,7 @@ import {BuchService} from '../shared/buch.service'
 export class SuchformularComponent {
     titel: string | undefined
     verlag: Verlag | undefined
-    art: BuchArt | undefined
+    art: KundeArt | undefined
     javascript = false
     typescript = false
 
@@ -42,13 +42,13 @@ export class SuchformularComponent {
 
     // DI: Constructor Injection (React hat uebrigens keine DI)
     // Empfehlung: Konstruktor nur fuer DI
-    constructor(private readonly buchService: BuchService) {
+    constructor(private readonly kundeService: KundeService) {
         console.log('SuchformularComponent.constructor()')
     }
 
     /**
      * Suche nach B&uuml;chern, die den spezfizierten Suchkriterien entsprechen
-     * @param suchkriterien: Suchkriterien vom Typ IBuchForm
+     * @param suchkriterien: Suchkriterien vom Typ IKundeForm
      * @return false, um das durch den Button-Klick ausgel&ouml;ste Ereignis
      *         zu konsumieren.
      */
@@ -65,7 +65,7 @@ export class SuchformularComponent {
 
         // Observables = Event-Streaming mit Promises
         this.waiting.emit(true)
-        this.buchService.find(suchkriterien)
+        this.kundeService.find(suchkriterien)
 
         // Inspektion der Komponente mit dem Tag-Namen "app" im Debugger
         // Voraussetzung: globale Variable ng deklarieren (s.o.)

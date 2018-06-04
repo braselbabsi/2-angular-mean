@@ -21,30 +21,30 @@ import {Title} from '@angular/platform-browser'
 import {ROUTES} from '../app/routes'
 import {SharedModule} from '../shared/shared.module'
 
-import {CreateBuchComponent} from './create/create-buch.component'
-import {CreateBuchGuard} from './create/create-buch.guard'
-import {DetailsBuchComponent} from './details/details-buch.component'
+import {CreateKundeComponent} from './create/create-kunde.component'
+import {CreateKundeGuard} from './create/create-kunde.guard'
+import {DetailsKundeComponent} from './details/details-kunde.component'
 import {DetailsSchlagwoerterComponent} from './details/details-schlagwoerter.component'
 import {DetailsStammdatenComponent} from './details/details-stammdaten.component'
 import {BalkendiagrammComponent} from './diagramme/balkendiagramm.component'
 import {LiniendiagrammComponent} from './diagramme/liniendiagramm.component'
 import {TortendiagrammComponent} from './diagramme/tortendiagramm.component'
-import {BuchService} from './shared/buch.service'
+import {KundeService} from './shared/kunde.service'
 import {SucheBuecherComponent} from './suche/suche-buecher.component'
 import {SuchergebnisComponent} from './suche/suchergebnis.component'
 import {SuchformularComponent} from './suche/suchformular.component'
-import {UpdateBuchComponent} from './update/update-buch.component'
+import {UpdateKundeComponent} from './update/update-kunde.component'
 import {UpdateSchlagwoerterComponent} from './update/update-schlagwoerter.component'
 import {UpdateStammdatenComponent} from './update/update-stammdaten.component'
 
 const komponentenExport: Array<Type<any>> = [
-    CreateBuchComponent,
-    DetailsBuchComponent,
+    CreateKundeComponent,
+    DetailsKundeComponent,
     BalkendiagrammComponent,
     LiniendiagrammComponent,
     TortendiagrammComponent,
     SucheBuecherComponent,
-    UpdateBuchComponent,
+    UpdateKundeComponent,
 ]
 
 const komponentenIntern: Array<Type<any>> = [
@@ -60,14 +60,14 @@ const komponentenIntern: Array<Type<any>> = [
 // Ein Modul enthaelt logisch zusammengehoerige Funktionalitaet.
 // Exportierte Komponenten koennen bei einem importierenden Modul in dessen
 // Komponenten innerhalb deren Templates (= HTML-Fragmente) genutzt werden.
-// BuchModule ist ein "FeatureModule", das Features fuer Buecher bereitstellt
+// KundeModule ist ein "FeatureModule", das Features fuer Buecher bereitstellt
 @NgModule({
     imports: [SharedModule, SharedModule.forRoot(), ROUTES],
     declarations: [...komponentenExport, ...komponentenIntern],
-    // BuchService mit eigenem DI-Context innerhalb des Moduls, d.h.
-    // es kann in anderen Moduln eine eigene Instanz von BuchService geben.
+    // KundeService mit eigenem DI-Context innerhalb des Moduls, d.h.
+    // es kann in anderen Moduln eine eigene Instanz von KundeService geben.
     // Title als Singleton aus dem SharedModule
-    providers: [BuchService, CreateBuchGuard, Title],
+    providers: [KundeService, CreateKundeGuard, Title],
     exports: komponentenExport,
 })
-export class BuchModule {}
+export class KundeModule {}

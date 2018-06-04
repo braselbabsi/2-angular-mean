@@ -23,8 +23,8 @@ import {Router} from '@angular/router'
 import {DETAILS_BUCH_PATH} from '../../app/routes'
 import {AuthService} from '../../auth/auth.service'
 import {easeIn, easeOut, isString, log} from '../../shared'
-import {Buch} from '../shared/buch'
-import {BuchService} from '../shared/buch.service'
+import {Kunde} from '../shared/kunde'
+import {KundeService} from '../shared/kunde.service'
 
 /**
  * Komponente f&uuml;r das Tag <code>hs-suchergebnis</code>, um zun&auml;chst
@@ -44,12 +44,12 @@ export class SuchergebnisComponent implements OnInit {
     // Decorator fuer ein Attribut. Siehe InputMetadata
     @Input() waiting!: boolean
 
-    buecher: Array<Buch> = []
+    buecher: Array<Kunde> = []
     errorMsg: string | undefined
     isAdmin!: boolean
 
     constructor(
-        private readonly buchService: BuchService,
+        private readonly kundeService: KundeService,
         private readonly router: Router,
         private readonly authService: AuthService,
     ) {
@@ -71,28 +71,28 @@ export class SuchergebnisComponent implements OnInit {
     }
 
     /**
-     * Das ausgew&auml;hlte bzw. angeklickte Buch in der Detailsseite anzeigen.
-     * @param buch Das ausgew&auml;hlte Buch
+     * Das ausgew&auml;hlte bzw. angeklickte Kunde in der Detailsseite anzeigen.
+     * @param kunde Das ausgew&auml;hlte Kunde
      */
     @log
-    onSelect(buch: Buch) {
-        const path = `/${DETAILS_BUCH_PATH}/${buch._id}`
+    onSelect(kunde: Kunde) {
+        const path = `/${DETAILS_BUCH_PATH}/${kunde._id}`
         console.log(`path=${path}`)
         this.router.navigate([path])
     }
 
     /**
-     * Das ausgew&auml;hlte bzw. angeklickte Buch l&ouml;schen.
-     * @param buch Das ausgew&auml;hlte Buch
+     * Das ausgew&auml;hlte bzw. angeklickte Kunde l&ouml;schen.
+     * @param kunde Das ausgew&auml;hlte Kunde
      */
     @log
-    onRemove(buch: Buch) {
+    onRemove(kunde: Kunde) {
         const successFn: () => void | undefined = undefined as any
         const errorFn: (status: number) => void = status =>
             console.error(`Fehler beim Loeschen: status=${status}`)
-        this.buchService.remove(buch, successFn, errorFn)
+        this.kundeService.remove(kunde, successFn, errorFn)
         if (this.buecher.length !== 0) {
-            this.buecher = this.buecher.filter((b: Buch) => b._id !== buch._id)
+            this.buecher = this.buecher.filter((b: Kunde) => b._id !== kunde._id)
         }
     }
 
@@ -101,14 +101,14 @@ export class SuchergebnisComponent implements OnInit {
     }
 
     /**
-     * Methode, um den injizierten <code>BuchService</code> zu beobachten,
+     * Methode, um den injizierten <code>KundeService</code> zu beobachten,
      * ob es gefundene bzw. darzustellende B&uuml;cher gibt, die in der
      * Kindkomponente f&uuml;r das Tag <code>gefundene-buecher</code>
      * dargestellt werden. Diese private Methode wird in der Methode
      * <code>ngOnInit</code> aufgerufen.
      */
     private observeBuecher() {
-        const next: (buecher: Array<Buch>) => void = buecher => {
+        const next: (buecher: Array<Kunde>) => void = buecher => {
             // zuruecksetzen
             this.waiting = false
             this.errorMsg = undefined
@@ -121,11 +121,11 @@ export class SuchergebnisComponent implements OnInit {
         }
 
         // Funktion als Funktionsargument, d.h. Code als Daten uebergeben
-        this.buchService.observeBuecher(next)
+        this.kundeService.observeBuecher(next)
     }
 
     /**
-     * Methode, um den injizierten <code>BuchService</code> zu beobachten,
+     * Methode, um den injizierten <code>KundeService</code> zu beobachten,
      * ob es bei der Suche Fehler gibt, die in der Kindkomponente f&uuml;r das
      * Tag <code>error-message</code> dargestellt werden. Diese private Methode
      * wird in der Methode <code>ngOnInit</code> aufgerufen.
@@ -158,7 +158,7 @@ export class SuchergebnisComponent implements OnInit {
             console.log(`SuchErgebnisComponent.errorMsg: ${this.errorMsg}`)
         }
 
-        this.buchService.observeError(next)
+        this.kundeService.observeError(next)
     }
 }
 

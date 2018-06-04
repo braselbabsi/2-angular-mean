@@ -30,13 +30,13 @@
         <span class="breadcrumb-item active">Details</span>
     </div>
 
-    <div *ngIf="buch === undefined; else tabs">
+    <div *ngIf="kunde === undefined; else tabs">
         <hs-error-message [text]="errorMsg"></hs-error-message>
     </div>
 
     <ng-template #tabs>
         <section class="mt-2">
-            <h4>Buch {{ buch !== undefined ? buch._id : ''}}:</h4>
+            <h4>kunde {{ kunde !== undefined ? kunde._id : ''}}:</h4>
 
             <!-- https://getbootstrap.com/docs/4.0/components/navs/#tabs -->
             <!-- jQuery erfordert id -->
@@ -48,7 +48,7 @@
                         Stammdaten
                     </a>
                 </li>
-                <li class="nav-item" *ngIf="buch !== undefined && buch !== null && buch.hasSchlagwoerter()">
+                <li class="nav-item" *ngIf="kunde !== undefined && kunde !== null && kunde.hasSchlagwoerter()">
                     <a class="nav-link" id="schlagwoerter-tab" href="#schlagwoerter"
                         data-toggle="tab" role="tab"
                         aria-controls="schlagwoerter" aria-expanded="true">
@@ -61,22 +61,22 @@
                 <div class="tab-pane fade show active" id="stammdaten"
                     role="tabpanel" aria-labelledby="stammdaten-tab">
                     <div class="mt-2">
-                        <hs-details-stammdaten [buch]="buch">
+                        <hs-details-stammdaten [kunde]="kunde">
                         </hs-details-stammdaten>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="schlagwoerter"
                     role="tabpanel" aria-labelledby="schlagwoerter-tab"
-                    *ngIf="buch !== undefined && buch !== null && buch.hasSchlagwoerter()">
+                    *ngIf="kunde !== undefined && kunde !== null && kunde.hasSchlagwoerter()">
                     <div class="mt-2">
-                        <hs-details-schlagwoerter [values]="buch !== undefined && buch !== null && buch.schlagwoerter">
+                        <hs-details-schlagwoerter [values]="kunde !== undefined && kunde !== null && kunde.schlagwoerter">
                         </hs-details-schlagwoerter>
                     </div>
                 </div>
             </div>
 
             <div *ngIf="isAdmin">
-                <a [routerLink]="['/update', buch !== undefined ? buch._id : '']" title="Bearbeiten"
+                <a [routerLink]="['/update', kunde !== undefined ? kunde._id : '']" title="Bearbeiten"
                     class="ml-1">
                     <i class="fas fa-2x fa-edit"></i>
                 </a>

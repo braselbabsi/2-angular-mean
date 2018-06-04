@@ -24,8 +24,8 @@ import {Router} from '@angular/router'
 
 import {HOME_PATH} from '../../app/routes'
 import {log} from '../../shared'
-import {Buch} from '../shared/buch'
-import {BuchService} from '../shared/buch.service'
+import {Kunde} from '../shared/kunde'
+import {KundeService} from '../shared/kunde.service'
 
 /**
  * Komponente mit dem Tag &lt;create-buch&gt;, um das Erfassungsformular
@@ -33,10 +33,10 @@ import {BuchService} from '../shared/buch.service'
  */
 @Component({
     // moduleId: module.id,
-    selector: 'hs-create-buch',
-    templateUrl: './create-buch.html',
+    selector: 'hs-create-kunde',
+    templateUrl: './create-kunde.html',
 })
-export class CreateBuchComponent implements OnInit {
+export class CreateKundeComponent implements OnInit {
     form!: FormGroup
 
     // Keine Vorbelegung bzw. der leere String, da es Placeholder gibt
@@ -77,11 +77,11 @@ export class CreateBuchComponent implements OnInit {
 
     constructor(
         private formBuilder: FormBuilder,
-        private buchService: BuchService,
+        private kundeService: KundeService,
         private router: Router,
         private titleService: Title,
     ) {
-        console.log('CreateBuchComponent.constructor()')
+        console.log('CreateKundeComponent.constructor()')
         if (router !== undefined) {
             console.log('Injizierter Router:', router)
         }
@@ -107,7 +107,7 @@ export class CreateBuchComponent implements OnInit {
             email: this.email,
         })
 
-        this.titleService.setTitle('Neues Buch')
+        this.titleService.setTitle('Neuer Kunde')
     }
 
     /**
@@ -131,15 +131,15 @@ export class CreateBuchComponent implements OnInit {
             return false
         }
 
-        const neuesBuch = Buch.fromForm(this.form.value)
-        console.log('neuesBuch=', neuesBuch)
+        const neuesKunde = Kunde.fromForm(this.form.value)
+        console.log('neuesKunde=', neuesKunde)
 
         const successFn: (location: string | undefined) => void = location => {
             console.log(
-                `CreateBuch.onSave(): successFn(): location: ${location}`,
+                `CreateKunde.onSave(): successFn(): location: ${location}`,
             )
             console.log(
-                `CreateBuch.onSave(): successFn(): navigate: ${HOME_PATH}`,
+                `CreateKunde.onSave(): successFn(): navigate: ${HOME_PATH}`,
             )
             this.fertig = true
             this.showWarning = false
@@ -149,10 +149,10 @@ export class CreateBuchComponent implements OnInit {
             status: number,
             errors: {[s: string]: any} | undefined,
         ) => void = (status, errors) => {
-            console.error(`CreateBuch.onSave(): errorFn(): status: ${status}`)
-            console.error('CreateBuch.onSave(): errorFn(): errors', errors)
+            console.error(`CreateKunde.onSave(): errorFn(): status: ${status}`)
+            console.error('CreateKunde.onSave(): errorFn(): errors', errors)
         }
-        this.buchService.save(neuesBuch, successFn, errorFn)
+        this.kundeService.save(neuesKunde, successFn, errorFn)
 
         // damit das (Submit-) Ereignis konsumiert wird und nicht an
         // uebergeordnete Eltern-Komponenten propagiert wird bis zum Refresh
@@ -161,6 +161,6 @@ export class CreateBuchComponent implements OnInit {
     }
 
     toString() {
-        return 'CreateBuchComponent'
+        return 'CreateKundeComponent'
     }
 }

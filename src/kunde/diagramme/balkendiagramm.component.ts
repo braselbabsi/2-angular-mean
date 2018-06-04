@@ -19,7 +19,7 @@ import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core'
 import {Title} from '@angular/platform-browser'
 
 import {log} from '../../shared'
-import {BuchService} from '../shared/buch.service'
+import {KundeService} from '../shared/kunde.service'
 
 /**
  * Komponente mit dem Tag &lt;hs-balkendiagramm&gt; zur Visualisierung
@@ -33,7 +33,7 @@ export class BalkendiagrammComponent implements AfterViewInit {
     @ViewChild('chartCanvas') chartCanvas!: ElementRef
 
     constructor(
-        private readonly buchService: BuchService,
+        private readonly kundeService: KundeService,
         private readonly titleService: Title,
     ) {
         console.log('BalkendiagrammComponent.constructor()')
@@ -48,7 +48,7 @@ export class BalkendiagrammComponent implements AfterViewInit {
     @log
     ngAfterViewInit() {
         const chartElement: HTMLCanvasElement = this.chartCanvas.nativeElement
-        this.buchService.createBarChart(chartElement)
+        this.kundeService.createBarChart(chartElement)
 
         this.titleService.setTitle('Balkendiagramm')
     }

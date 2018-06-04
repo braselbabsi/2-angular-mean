@@ -39,7 +39,7 @@ import {log} from '../../shared'
     `,
 })
 export class DetailsSchlagwoerterComponent implements OnInit {
-    // <hs-schlagwoerter [values]="buch.schlagwoerter">
+    // <hs-schlagwoerter [values]="kunde.schlagwoerter">
     // Decorator fuer ein Attribut. Siehe InputMetadata
     @Input() values!: Array<string>
 
