@@ -1,0 +1,267 @@
+<!--
+   Copyright (C) 2015 - 2018 Juergen Zimmermann, Hochschule Karlsruhe
+
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<div class="card">
+    <div class="card-header bg-primary">
+        <span class="ml-1 font-weight-bold">Neues Buch</span>
+    </div>
+
+    <div class="card-body">
+        <!-- Template-Syntax:
+                [formGroup]="form"  fuer Input = Property Binding
+                                    d.h. formGroup fuer Attr. form
+                (submit)="save()"  fuer Output = Event Binding
+                                   d.h. Ereignis submit an save() anbinden
+                                   oder on-submit="save"
+                Definition von Attributnamen gemaess HTML: Attribute names
+                must consist of one or more characters other than the
+                space characters, U+0000 NULL, """, "'", ">", "/", "=",
+                the control characters, and any characters that are not
+                defined by Unicode.
+                https://github.com/angular/angular/issues/6786
+        -->
+        <!-- dynamisches Formular durch formGroup -->
+        <form [formGroup]="form" role="form">
+            <div class="form-group row has-warning" *ngIf="showWarning">
+                <div class="form-control-feedback">
+                    <span class="alert alert-warning">
+                        <i class="fas fa-2x fa-exclamation-triangle"></i>
+                        <strong class="text-help ml-1">
+                            Wenn Sie die Seite jetzt verlassen, verlieren Sie Ihre eingegebenen Daten.
+                        </strong>
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="titelInput" class="col col-2 form-control-label">
+                    Titel *
+                </label>
+                <div class="col col-10">
+                    <input id="titelInput" placeholder="Titel" class="form-control"
+                        autofocus formControlName="titel"
+                        [class.border-danger]="titel.invalid && titel.touched">
+                    <div *ngIf="titel.invalid && titel.touched" class="alert alert-danger">
+                        <div *ngIf="titel.errors !== null && titel.errors.required">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span class="ml-1">
+                                Ein Buchtitel muss eingegeben werden.
+                            </span>
+                        </div>
+                        <div *ngIf="titel.errors !== null && titel.errors.minlength">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span class="ml-1">
+                                Ein Buchtitel muss mindestens 2 Zeichen lang sein.
+                            </span>
+                        </div>
+                        <div *ngIf="titel.errors !== null && titel.errors.pattern">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span class="ml-1">
+                                Ein Buchtitel muss mit einem Buchstaben oder einer Ziffer beginnen.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col col-2 form-control-label">Bewertung</label>
+                <div class="col col-10">
+                    <select class="form-control" formControlName="rating">
+                        <option value="">Bewertung ausw&auml;hlen</option>
+                        <optgroup label="Hoch">
+                            <option value="5">5</option>
+                        </optgroup>
+                        <optgroup label="Mittel">
+                            <option value="4">4</option>
+                            <option value="3">3</option>
+                        </optgroup>
+                        <optgroup label="Niedrig">
+                            <option value="2">2</option>
+                            <option value="1">1</option>
+                        </optgroup>
+                </select>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col col-2 form-control-label">Art *</label>
+                <div class="col col-10">
+                    <div class="radio">
+                        <input type="radio" id="druckausgabeInput"
+                            formControlName="art" name="art" value="DRUCKAUSGABE">
+                        <label class="radio-inline" for="druckausgabeInput">
+                            Druckausgabe
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <input type="radio" id="kindleInput"
+                            formControlName="art" name="art" value="KINDLE">
+                        <label class="radio-inline" for="kindleInput">
+                             Kindle
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col col-2 form-control-label">Verlag *</label>
+                <div class="col col-10">
+                    <select class="form-control" formControlName="verlag"
+                        required [class.border-danger]="verlag.invalid && verlag.touched">
+                        <option value="">Einen Verlag ausw&auml;hlen</option>
+                        <option value="IWI_VERLAG">Iwi Verlag</option>
+                        <option value="HSKA_VERLAG">Hska Verlag</option>
+                    </select>
+                    <div *ngIf="verlag.invalid && verlag.touched" class="alert alert-danger">
+                        <div *ngIf="verlag.errors !== null && verlag.errors.required">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span class="ml-1">
+                                Ein Verlag ist erforderlich.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="preisInput" class="col col-2 form-control-label">
+                    Preis *
+                </label>
+                <div class="col col-10">
+                    <div class="input-group">
+                        <input id="preisInput" placeholder="Preis, z.B. 123.45"
+                            required class="form-control" type="number" formControlName="preis"
+                            [class.border-danger]="preis.invalid && preis.touched">
+                        <span class="input-group-addon">&#x20ac;</span>
+                    </div>
+                    <div *ngIf="preis.invalid && preis.touched" class="alert alert-danger">
+                        <div *ngIf="preis.errors !== null && preis.errors.required">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span class="ml-1">
+                                Ein Preis muss eingegeben werden, z.B. 123.45
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="rabattInput" class="col col-2 form-control-label">
+                    Rabatt *
+                </label>
+                <div class="col col-10">
+                    <div class="input-group">
+                        <input id="rabattInput" placeholder="Rabatt in Prozent, z.B. 5.67"
+                            required type="number" class="form-control"
+                            formControlName="rabatt"
+                            [class.border-danger]="rabatt.invalid && rabatt.touched">
+                        <span class="input-group-addon">%</span>
+                    </div>
+                    <div *ngIf="rabatt.invalid && rabatt.touched" class="alert alert-danger">
+                        <div *ngIf="rabatt.errors !== null && rabatt.errors.required">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span class="ml-1">
+                                Ein Rabatt muss in Prozent eingegeben werden, z.B. 5.67
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="datumInput" class="col col-2 form-control-label">
+                    Datum
+                </label>
+                <div class="col col-10">
+                    <input id="datumInput" class="form-control" type="date" formControlName="datum" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="lieferbarInput" class="col col-2 form-control-label">
+                    Lieferbar?
+                </label>
+                <div class="col col-10">
+                    <div class="checkbox">
+                        <input id="lieferbarInput" type="checkbox"
+                                formControlName="lieferbar"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="schlagwoerterInput" class="col col-2 form-control-label">
+                    Schlagw&ouml;rter
+                </label>
+                <div class="col col-10">
+                    <div class="checkbox">
+                        <input type="checkbox" id="javascriptInput"
+                                formControlName="javascript"/>
+                        <label for="javascriptInput">JavaScript</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" id="typescriptInput"
+                                formControlName="typescript"/>
+                        <label for="typescriptInput">TypeScript</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="emailInput" class="col col-2 form-control-label">
+                    Email *
+                </label>
+                <div class="col col-10">
+                    <input id="emailInput" placeholder="Email" class="form-control"
+                        required minlength="2" formControlName="email"
+                        [class.border-danger]="email.invalid && email.touched">
+                    <div *ngIf="email.invalid && email.touched" class="alert alert-danger">
+                        <div *ngIf="email.errors !== null && email.errors.required">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span class="ml-1">
+                                Eine Emailadresse muss eingegeben werden.
+                            </span>
+                        </div>
+                        <div *ngIf="email.errors !== null && email.errors.email">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span class="ml-1">
+                                Die Emailadresse ist ung&uuml;ltig.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col offset-2">
+                    <!-- Template-Syntax:
+                            (click)="onSave()" fuer Output = Event Binding
+                                               d.h. Ereignis click an onSave() anbinden
+                                               oder on-click="onSave"
+                            [disabled]="..." fuer Input = Property Binding
+                    -->
+                    <button class="btn btn-primary" (click)="onSave()" [disabled]="!form.valid">
+                        <i class="fas fa-check"></i>
+                        <span class="ml-1">Jetzt anlegen</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <small>* sind Pflichtfelder</small>
+    </div>
+</div>
