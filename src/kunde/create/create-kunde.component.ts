@@ -28,7 +28,7 @@ import {Kunde} from '../shared/kunde'
 import {KundeService} from '../shared/kunde.service'
 
 /**
- * Komponente mit dem Tag &lt;create-buch&gt;, um das Erfassungsformular
+ * Komponente mit dem Tag &lt;create-kunde&gt;, um das Erfassungsformular
  * f&uuml;r ein neues Buch zu realisieren.
  */
 @Component({
