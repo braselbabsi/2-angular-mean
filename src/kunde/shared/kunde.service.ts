@@ -385,7 +385,9 @@ export class KundeService {
         const nextFn: ((buecher: Array<KundeServer>) => void) = buecher => {
             const labels = buecher.map(kunde => this.setKundeId(kunde))
             console.log('KundeService.createBarChart(): labels: ', labels)
-            const ratingData = buecher.map(kunde => kunde.rating) as Array<number>
+            const ratingData = buecher.map(kunde => kunde.rating) as Array<
+                number
+            >
 
             // Alternativen zu Chart.js:
             // D3:            https://d3js.org
@@ -417,7 +419,9 @@ export class KundeService {
         const nextFn: ((buecher: Array<KundeServer>) => void) = buecher => {
             const labels = buecher.map(kunde => this.setKundeId(kunde))
             console.log('KundeService.createLinearChart(): labels: ', labels)
-            const ratingData = buecher.map(kunde => kunde.rating) as Array<number>
+            const ratingData = buecher.map(kunde => kunde.rating) as Array<
+                number
+            >
 
             const datasets: Array<ChartDataSets> = [
                 {label: 'Bewertung', data: ratingData},
@@ -445,7 +449,9 @@ export class KundeService {
         const nextFn: ((buecher: Array<KundeServer>) => void) = buecher => {
             const labels = buecher.map(kunde => this.setKundeId(kunde))
             console.log('KundeService.createLinearChart(): labels: ', labels)
-            const ratingData = buecher.map(kunde => kunde.rating) as Array<number>
+            const ratingData = buecher.map(kunde => kunde.rating) as Array<
+                number
+            >
 
             const anzahl = ratingData.length
             const backgroundColor = new Array<string>(anzahl)

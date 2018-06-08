@@ -92,7 +92,9 @@ export class SuchergebnisComponent implements OnInit {
             console.error(`Fehler beim Loeschen: status=${status}`)
         this.kundeService.remove(kunde, successFn, errorFn)
         if (this.buecher.length !== 0) {
-            this.buecher = this.buecher.filter((b: Kunde) => b._id !== kunde._id)
+            this.buecher = this.buecher.filter(
+                (b: Kunde) => b._id !== kunde._id,
+            )
         }
     }
 

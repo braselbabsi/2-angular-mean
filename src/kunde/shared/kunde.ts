@@ -202,7 +202,8 @@ export class Kunde {
         const datumMoment =
             kundeForm.datum === undefined ? undefined : moment(kundeForm.datum)
 
-        const rabatt = kundeForm.rabatt === undefined ? 0 : kundeForm.rabatt / 100
+        const rabatt =
+            kundeForm.rabatt === undefined ? 0 : kundeForm.rabatt / 100
         const kunde = new Kunde(
             kundeForm._id,
             kundeForm.titel,

@@ -43,7 +43,10 @@ export class BasicAuthService {
      * @return void
      */
     @log
-    async login(username: string | undefined, password: string | undefined): Promise<Array<string>> {
+    async login(
+        username: string | undefined,
+        password: string | undefined,
+    ): Promise<Array<string>> {
         const loginUri = `${BASE_URI}auth/rollen`
         console.log(`Login URI = ${loginUri}`)
 
