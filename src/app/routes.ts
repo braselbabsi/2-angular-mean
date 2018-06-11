@@ -18,14 +18,14 @@
 import {ModuleWithProviders} from '@angular/core'
 import {RouterModule, Routes} from '@angular/router'
 
-import {CreateBuchComponent} from '../buch/create/create-buch.component'
-import {CreateBuchGuard} from '../buch/create/create-buch.guard'
-import {DetailsBuchComponent} from '../buch/details/details-buch.component'
-import {BalkendiagrammComponent} from '../buch/diagramme/balkendiagramm.component'
-import {LiniendiagrammComponent} from '../buch/diagramme/liniendiagramm.component'
-import {TortendiagrammComponent} from '../buch/diagramme/tortendiagramm.component'
-import {SucheBuecherComponent} from '../buch/suche/suche-buecher.component'
-import {UpdateBuchComponent} from '../buch/update/update-buch.component'
+import {CreateKundeComponent} from '../kunde/create/create-kunde.component'
+import {CreateKundeGuard} from '../kunde/create/create-kunde.guard'
+import {DetailsKundeComponent} from '../kunde/details/details-kunde.component'
+import {BalkendiagrammComponent} from '../kunde/diagramme/balkendiagramm.component'
+import {LiniendiagrammComponent} from '../kunde/diagramme/liniendiagramm.component'
+import {TortendiagrammComponent} from '../kunde/diagramme/tortendiagramm.component'
+import {SucheKundenComponent} from '../kunde/suche/suche-kunden.component'
+import {UpdateKundeComponent} from '../kunde/update/update-kunde.component'
 
 import {AdminGuard} from '../auth/admin.guard'
 import {HomeComponent} from '../home/home.component'
@@ -41,19 +41,19 @@ const routes: Routes = [
     {path: HOME_PATH, component: HomeComponent},
     {path: '', redirectTo: HOME_PATH, pathMatch: 'full'},
 
-    {path: 'suche', component: SucheBuecherComponent},
+    {path: 'suche', component: SucheKundenComponent},
     // id als Pfad-Parameter
-    {path: `${DETAILS_BUCH_PATH}/:id`, component: DetailsBuchComponent},
+    {path: `${DETAILS_BUCH_PATH}/:id`, component: DetailsKundeComponent},
     {
         path: 'update/:id',
-        component: UpdateBuchComponent,
+        component: UpdateKundeComponent,
         canActivate: [AdminGuard],
     },
     {
         path: 'create',
-        component: CreateBuchComponent,
+        component: CreateKundeComponent,
         canActivate: [AdminGuard],
-        canDeactivate: [CreateBuchGuard],
+        canDeactivate: [CreateKundeGuard],
     },
     {
         path: 'balkendiagramm',

@@ -19,8 +19,8 @@ import {NgModule} from '@angular/core'
 import {BrowserModule} from '@angular/platform-browser'
 
 import {AUTH_PROVIDERS} from '../auth/auth.module'
-import {BuchModule} from '../buch/buch.module'
 import {HomeModule} from '../home/home.module'
+import {KundeModule} from '../kunde/kunde.module'
 import {LayoutModule} from '../layout/layout.module'
 import {SharedModule} from '../shared/shared.module'
 
@@ -42,7 +42,7 @@ import {ROUTES} from './routes'
         BrowserModule,
         SharedModule,
         HomeModule,
-        BuchModule,
+        KundeModule,
         LayoutModule,
         AUTH_PROVIDERS,
         ROUTES,
