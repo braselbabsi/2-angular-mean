@@ -23,14 +23,14 @@
 </div>
 
 <ng-template #suchergebnis>
-    <div *ngIf="buecher.length === 0; else gefundeneBuecher">
-        <!-- Achtung: zu Beginn gibt es noch keine Buecher -->
+    <div *ngIf="kunden.length === 0; else gefundeneKunden">
+        <!-- Achtung: zu Beginn gibt es noch keine Kunden -->
         <hs-error-message [text]="errorMsg"></hs-error-message>
     </div>
 
-    <ng-template #gefundeneBuecher>
+    <ng-template #gefundeneKunden>
         <div class="card mt-2"
-            *ngIf="buecher !== null && buecher.length !== 0; else errorMsg">
+            *ngIf="kunden !== null && kunden.length !== 0; else errorMsg">
             <div class="card-header">
                 <i class="fas fa-folder-open"></i>
                 <span class="ml-1 font-weight-bold">Gefundene B&uuml;cher</span>
@@ -61,7 +61,7 @@
                         <!-- Template Binding: ngFor -->
                         <!-- Event-Binding: statt (click) auch on-click -->
                         <!-- Animation flyInOut siehe unten -->
-                        <tr *ngFor="let b of buecher; index as i"
+                        <tr *ngFor="let b of kunden; index as i"
                             (click)="onSelect(b)" [@easeOut]="'in'">
                             <td>{{ i + 1 }}</td>
                             <td>{{ b._id }}</td>
@@ -107,7 +107,7 @@
                 </table>
             </div>
             <div class="card-footer">
-                <div [ngPlural]="buecher.length">
+                <div [ngPlural]="kunden.length">
                     <!-- zu vergleichender Ausdruck -->
                     <ng-template ngPluralCase="=0">
                         <i class="fas fa-info-circle"></i> Es gibt keinen Kunden
@@ -117,7 +117,7 @@
                     </ng-template>
                     <ng-template ngPluralCase="other">
                         <i class="fas fa-info-circle"></i>
-                        Es gibt {{ buecher.length }} B&uuml;cher
+                        Es gibt {{ kunden.length }} B&uuml;cher
                     </ng-template>
                 </div>
 
@@ -129,7 +129,7 @@
 
         <!-- Ausgabe des JSON-Datensatzes im Webbrowser statt console.log(...) -->
         <!--
-        <pre>{{buecher | json}}</pre>
+        <pre>{{kunden | json}}</pre>
         -->
     </ng-template>
 </ng-template>

@@ -32,7 +32,7 @@ import {ChartConfiguration, ChartDataSets} from 'chart.js'
 import * as _ from 'lodash'
 import * as moment from 'moment'
 
-import {BASE_URI, log, PATH_BUECHER} from '../../shared'
+import {BASE_URI, log, PATH_KUNDEN} from '../../shared'
 // Aus SharedModule als Singleton exportiert
 import {DiagrammService} from '../../shared/diagramm.service'
 
@@ -56,8 +56,8 @@ import {Kunde, KundeForm, KundeServer} from './kunde'
  */
 @Injectable()
 export class KundeService {
-    private baseUriBuecher: string
-    private buecherEmitter = new EventEmitter<Array<Kunde>>()
+    private baseUriKunden: string
+    private kundenEmitter = new EventEmitter<Array<Kunde>>()
     private kundeEmitter = new EventEmitter<Kunde>()
     private errorEmitter = new EventEmitter<string | number>()
     // tslint:disable-next-line:variable-name
@@ -78,9 +78,9 @@ export class KundeService {
         private readonly diagrammService: DiagrammService,
         @Inject(HttpClient) private readonly httpClient: HttpClient,
     ) {
-        this.baseUriBuecher = `${BASE_URI}${PATH_BUECHER}`
+        this.baseUriKunden = `${BASE_URI}${PATH_KUNDEN}`
         console.log(
-            `KundeService.constructor(): baseUriKunde=${this.baseUriBuecher}`,
+            `KundeService.constructor(): baseUriKunde=${this.baseUriKunden}`,
         )
     }
 
@@ -95,7 +95,7 @@ export class KundeService {
     }
 
     @log
-    observeBuecher(next: (buecher: Array<Kunde>) => void) {
+    observeKunden(next: (kunden: Array<Kunde>) => void) {
         // Observable.subscribe() aus RxJS liefert ein Subscription Objekt,
         // mit dem man den Request auch abbrechen ("cancel") kann
         // tslint:disable:max-line-length
@@ -103,7 +103,7 @@ export class KundeService {
         // http://stackoverflow.com/questions/34533197/what-is-the-difference-between-rx-observable-subscribe-and-foreach
         // https://xgrommx.github.io/rx-book/content/observable/observable_instance_methods/subscribe.html
         // tslint:enable:max-line-length
-        return this.buecherEmitter.subscribe(next)
+        return this.kundenEmitter.subscribe(next)
     }
 
     @log
@@ -117,21 +117,21 @@ export class KundeService {
     }
 
     /**
-     * Buecher suchen
+     * Kunden suchen
      * @param suchkriterien Die Suchkriterien
      */
     @log
     find(suchkriterien: KundeForm) {
         const params = this.suchkriterienToHttpParams(suchkriterien)
-        const uri = this.baseUriBuecher
+        const uri = this.baseUriKunden
         console.log(`KundeService.find(): uri=${uri}`)
 
         // Statuscode 2xx
         const nextFn: (response: Array<KundeServer>) => void = response => {
-            const buecher = response.map(jsonObjekt =>
+            const kunden = response.map(jsonObjekt =>
                 Kunde.fromServer(jsonObjekt),
             )
-            this.buecherEmitter.emit(buecher)
+            this.kundenEmitter.emit(kunden)
         }
 
         const errorFn: (err: HttpErrorResponse) => void = err => {
@@ -190,7 +190,7 @@ export class KundeService {
         }
 
         // Ggf wegen fehlender Versionsnummer (im ETag) nachladen
-        const uri = `${this.baseUriBuecher}/${id}`
+        const uri = `${this.baseUriKunden}/${id}`
 
         // Statuscode 2xx
         const nextFn: ((
@@ -274,7 +274,7 @@ export class KundeService {
         }
 
         this.httpClient
-            .post(this.baseUriBuecher, neuesKunde, {
+            .post(this.baseUriKunden, neuesKunde, {
                 headers: this.headers,
                 observe: 'response',
                 responseType: 'text',
@@ -317,7 +317,7 @@ export class KundeService {
             }
         }
 
-        const uri = `${this.baseUriBuecher}/${kunde._id}`
+        const uri = `${this.baseUriKunden}/${kunde._id}`
         this.headers = this.headers.append('If-Match', version.toString())
         console.log('headers=', this.headers)
         this.httpClient
@@ -337,7 +337,7 @@ export class KundeService {
         successFn: () => void | undefined,
         errorFn: (status: number) => void,
     ) {
-        const uri = `${this.baseUriBuecher}/${kunde._id}`
+        const uri = `${this.baseUriKunden}/${kunde._id}`
 
         const errorFnDelete: ((err: HttpErrorResponse) => void) = err => {
             if (err.error instanceof Error) {
@@ -381,11 +381,11 @@ export class KundeService {
      */
     @log
     createBarChart(chartElement: HTMLCanvasElement) {
-        const uri = this.baseUriBuecher
-        const nextFn: ((buecher: Array<KundeServer>) => void) = buecher => {
-            const labels = buecher.map(kunde => this.setKundeId(kunde))
+        const uri = this.baseUriKunden
+        const nextFn: ((kunden: Array<KundeServer>) => void) = kunden => {
+            const labels = kunden.map(kunde => this.setKundeId(kunde))
             console.log('KundeService.createBarChart(): labels: ', labels)
-            const ratingData = buecher.map(kunde => kunde.rating) as Array<
+            const ratingData = kunden.map(kunde => kunde.rating) as Array<
                 number
             >
 
@@ -415,11 +415,11 @@ export class KundeService {
      */
     @log
     createLinearChart(chartElement: HTMLCanvasElement) {
-        const uri = this.baseUriBuecher
-        const nextFn: ((buecher: Array<KundeServer>) => void) = buecher => {
-            const labels = buecher.map(kunde => this.setKundeId(kunde))
+        const uri = this.baseUriKunden
+        const nextFn: ((kunden: Array<KundeServer>) => void) = kunden => {
+            const labels = kunden.map(kunde => this.setKundeId(kunde))
             console.log('KundeService.createLinearChart(): labels: ', labels)
-            const ratingData = buecher.map(kunde => kunde.rating) as Array<
+            const ratingData = kunden.map(kunde => kunde.rating) as Array<
                 number
             >
 
@@ -445,11 +445,11 @@ export class KundeService {
      */
     @log
     createPieChart(chartElement: HTMLCanvasElement) {
-        const uri = this.baseUriBuecher
-        const nextFn: ((buecher: Array<KundeServer>) => void) = buecher => {
-            const labels = buecher.map(kunde => this.setKundeId(kunde))
+        const uri = this.baseUriKunden
+        const nextFn: ((kunden: Array<KundeServer>) => void) = kunden => {
+            const labels = kunden.map(kunde => this.setKundeId(kunde))
             console.log('KundeService.createLinearChart(): labels: ', labels)
-            const ratingData = buecher.map(kunde => kunde.rating) as Array<
+            const ratingData = kunden.map(kunde => kunde.rating) as Array<
                 number
             >
 

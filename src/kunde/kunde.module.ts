@@ -30,7 +30,7 @@ import {BalkendiagrammComponent} from './diagramme/balkendiagramm.component'
 import {LiniendiagrammComponent} from './diagramme/liniendiagramm.component'
 import {TortendiagrammComponent} from './diagramme/tortendiagramm.component'
 import {KundeService} from './shared/kunde.service'
-import {SucheBuecherComponent} from './suche/suche-kunden.component'
+import {SucheKundenComponent} from './suche/suche-kunden.component'
 import {SuchergebnisComponent} from './suche/suchergebnis.component'
 import {SuchformularComponent} from './suche/suchformular.component'
 import {UpdateKundeComponent} from './update/update-kunde.component'
@@ -43,14 +43,14 @@ const komponentenExport: Array<Type<any>> = [
     BalkendiagrammComponent,
     LiniendiagrammComponent,
     TortendiagrammComponent,
-    SucheBuecherComponent,
+    SucheKundenComponent,
     UpdateKundeComponent,
 ]
 
 const komponentenIntern: Array<Type<any>> = [
     DetailsSchlagwoerterComponent,
     DetailsStammdatenComponent,
-    SucheBuecherComponent,
+    SucheKundenComponent,
     SuchergebnisComponent,
     SuchformularComponent,
     UpdateSchlagwoerterComponent,
@@ -60,7 +60,7 @@ const komponentenIntern: Array<Type<any>> = [
 // Ein Modul enthaelt logisch zusammengehoerige Funktionalitaet.
 // Exportierte Komponenten koennen bei einem importierenden Modul in dessen
 // Komponenten innerhalb deren Templates (= HTML-Fragmente) genutzt werden.
-// KundeModule ist ein "FeatureModule", das Features fuer Buecher bereitstellt
+// KundeModule ist ein "FeatureModule", das Features fuer Kunden bereitstellt
 @NgModule({
     imports: [SharedModule, SharedModule.forRoot(), ROUTES],
     declarations: [...komponentenExport, ...komponentenIntern],

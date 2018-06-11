@@ -21,7 +21,7 @@ import {Title} from '@angular/platform-browser'
 import {log} from '../../shared'
 
 /**
- * Komponente f&uuml;r das Tag <code>&lt;hs-suche-buecher&gt;</code>, die aus
+ * Komponente f&uuml;r das Tag <code>&lt;hs-suche-kunden&gt;</code>, die aus
  * den Kindkomponenten f&uuml;r diese Tags besteht:
  * <ul>
  *  <li> <code>hs-suchformular</code>
@@ -29,17 +29,17 @@ import {log} from '../../shared'
  * </ul>
  */
 @Component({
-    selector: 'hs-suche-buecher',
+    selector: 'hs-suche-kunden',
     template: `
         <hs-suchformular (waiting)="setWaiting($event)"></hs-suchformular>
         <hs-suchergebnis [waiting]="waiting"></hs-suchergebnis>
     `,
 })
-export class SucheBuecherComponent implements OnInit {
+export class SucheKundenComponent implements OnInit {
     waiting!: boolean
 
     constructor(private readonly titleService: Title) {
-        console.log('SucheBuecherComponent.constructor()')
+        console.log('SucheKundenComponent.constructor()')
     }
 
     @log
@@ -62,6 +62,6 @@ export class SucheBuecherComponent implements OnInit {
     }
 
     toString() {
-        return 'SucheBuecherComponent'
+        return 'SucheKundenComponent'
     }
 }

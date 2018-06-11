@@ -44,7 +44,7 @@ export class SuchergebnisComponent implements OnInit {
     // Decorator fuer ein Attribut. Siehe InputMetadata
     @Input() waiting!: boolean
 
-    buecher: Array<Kunde> = []
+    kunden: Array<Kunde> = []
     errorMsg: string | undefined
     isAdmin!: boolean
 
@@ -65,7 +65,7 @@ export class SuchergebnisComponent implements OnInit {
     // IntelliSense bei der Verwendung von TypeScript.
     @log
     ngOnInit() {
-        this.observeBuecher()
+        this.observeKunden()
         this.observeError()
         this.isAdmin = this.authService.isAdmin()
     }
@@ -91,8 +91,8 @@ export class SuchergebnisComponent implements OnInit {
         const errorFn: (status: number) => void = status =>
             console.error(`Fehler beim Loeschen: status=${status}`)
         this.kundeService.remove(kunde, successFn, errorFn)
-        if (this.buecher.length !== 0) {
-            this.buecher = this.buecher.filter(
+        if (this.kunden.length !== 0) {
+            this.kunden = this.kunden.filter(
                 (b: Kunde) => b._id !== kunde._id,
             )
         }
@@ -105,25 +105,25 @@ export class SuchergebnisComponent implements OnInit {
     /**
      * Methode, um den injizierten <code>KundeService</code> zu beobachten,
      * ob es gefundene bzw. darzustellende B&uuml;cher gibt, die in der
-     * Kindkomponente f&uuml;r das Tag <code>gefundene-buecher</code>
+     * Kindkomponente f&uuml;r das Tag <code>gefundene-kunden</code>
      * dargestellt werden. Diese private Methode wird in der Methode
      * <code>ngOnInit</code> aufgerufen.
      */
-    private observeBuecher() {
-        const next: (buecher: Array<Kunde>) => void = buecher => {
+    private observeKunden() {
+        const next: (kunden: Array<Kunde>) => void = kunden => {
             // zuruecksetzen
             this.waiting = false
             this.errorMsg = undefined
 
-            this.buecher = buecher
+            this.kunden = kunden
             console.log(
-                'SuchErgebnisComponent.observeBuecher: this.buecher=',
-                this.buecher,
+                'SuchErgebnisComponent.observeKunden: this.kunden=',
+                this.kunden,
             )
         }
 
         // Funktion als Funktionsargument, d.h. Code als Daten uebergeben
-        this.kundeService.observeBuecher(next)
+        this.kundeService.observeKunden(next)
     }
 
     /**
@@ -136,7 +136,7 @@ export class SuchergebnisComponent implements OnInit {
         const next: (err: string | number) => void = err => {
             // zuruecksetzen
             this.waiting = false
-            this.buecher = []
+            this.kunden = []
 
             console.log('SuchErgebnisComponent.observeError: err=', err)
             if (err === undefined) {

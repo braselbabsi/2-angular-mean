@@ -28,6 +28,6 @@ export const BASE_URI = `${SCHEME}://${SERVERNAME}:${PORT}${BASE_PATH}`
 /**
  * Pfad f&uuml;r den Zugriff auf B&uuml;cher, ausgehend von der Basis-URI.
  */
-export const PATH_BUECHER = ``
+export const PATH_KUNDEN = ``
 
 export const TIMEZONE_OFFSET_MS = new Date().getTimezoneOffset() * 60 * 1000
