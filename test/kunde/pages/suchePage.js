@@ -58,13 +58,13 @@ const submit = function() {
     this.expect.element('@button').to.be.visible
     return this.click('@button')
 }
-const checkAlleBuecher = function() {
-    this.expect.element('@gefundeneBuecherHeader').to.be.visible
+const checkAlleKunden = function() {
+    this.expect.element('@gefundeneKundenHeader').to.be.visible
     return this
 }
 
-const checkGefundeneBuecher = function(titelSubstr) {
-    this.expect.element('@gefundeneBuecherHeader').to.be.visible
+const checkGefundeneKunden = function(titelSubstr) {
+    this.expect.element('@gefundeneKundenHeader').to.be.visible
 
     const {api} = this.client
 
@@ -103,7 +103,7 @@ const clickTitelErsteZeile = function() {
 const checkFehlermeldung = function() {
     const {expect} = this
     expect.element('@fehlermeldung').to.be.visible
-    expect.element('@gefundeneBuecherHeader').to.be.not.present
+    expect.element('@gefundeneKundenHeader').to.be.not.present
     return this
 }
 
@@ -137,7 +137,7 @@ export default {
         button: {
             selector: 'button svg[class="svg-inline--fa fa-search fa-w-16"]',
         },
-        gefundeneBuecherHeader: {
+        gefundeneKundenHeader: {
             selector: 'div[class=card-header]',
         },
         fehlermeldung: {
@@ -164,8 +164,8 @@ export default {
             javascript,
             typescript,
             submit,
-            checkAlleBuecher,
-            checkGefundeneBuecher,
+            checkAlleKunden,
+            checkGefundeneKunden,
             checkFehlermeldung,
             clickTitelErsteZeile,
             deleteErsteZeile,

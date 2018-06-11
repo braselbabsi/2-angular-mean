@@ -18,7 +18,7 @@
 import {ADMIN_PASSWORD, ADMIN_USERNAME, PAUSE} from '../shared/constants'
 
 export default {
-    '@tags': ['buecher', 'delete'],
+    '@tags': ['kunden', 'delete'],
 
     after() {
         this.client.end()
@@ -29,7 +29,7 @@ export default {
         done()
     },
 
-    'Buch mit Titel "Epsilon" loeschen'() {
+    'Kunde mit Name "Epsilon" loeschen'() {
         // Given
         const titel = 'Epsilon'
         const {page} = this.client

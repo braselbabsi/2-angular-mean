@@ -18,7 +18,7 @@
 import {PAUSE} from '../shared/constants'
 
 export default {
-    '@tags': ['buecher', 'details'],
+    '@tags': ['kunden', 'details'],
 
     after() {
         this.client.end()
@@ -29,7 +29,7 @@ export default {
         done()
     },
 
-    'Details zu Buch mit Titel "Beta"'() {
+    'Details zu Kunde mit Titel "Beta"'() {
         // arrange
         const titel = 'Beta'
         const {page} = this.client

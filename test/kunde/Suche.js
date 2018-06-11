@@ -18,7 +18,7 @@
 import {PAUSE} from '../shared/constants'
 
 export default {
-    '@tags': ['buecher', 'suche'],
+    '@tags': ['kunden', 'suche'],
 
     after() {
         this.client.end()
@@ -29,7 +29,7 @@ export default {
         done()
     },
 
-    'Suche alle Buecher'() {
+    'Suche alle Kunden'() {
         // arrange
         this.client.page
             .suchePage()
@@ -40,10 +40,10 @@ export default {
             .submit()
 
             // assert
-            .checkAlleBuecher()
+            .checkAlleKunden()
     },
 
-    'Suche Buecher mit "a" im Titel'() {
+    'Suche Kunden mit "a" im Titel'() {
         // arrange
         const titel = 'a'
         this.client.page
@@ -56,7 +56,7 @@ export default {
             .submit()
 
             // assert
-            .checkGefundeneBuecher(titel)
+            .checkGefundeneKunden(titel)
     },
 
     'Suche mit Fehlermeldung'() {

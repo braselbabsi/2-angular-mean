@@ -18,7 +18,7 @@
 import {ADMIN_PASSWORD, ADMIN_USERNAME, PAUSE} from '../shared/constants'
 
 export default {
-    '@tags': ['buecher', 'update'],
+    '@tags': ['kunden', 'update'],
 
     after() {
         this.client.end()
@@ -29,7 +29,7 @@ export default {
         done()
     },
 
-    'Buch mit Titel "Gamma" aktualisieren'() {
+    'Kunde mit Titel "Gamma" aktualisieren'() {
         // arrange
         const titel = 'Gamma'
         const neuerTitel = 'Geaendert'
