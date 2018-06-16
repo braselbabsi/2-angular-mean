@@ -67,7 +67,10 @@ export class UpdateStammdatenComponent implements OnInit {
                 Validators.pattern(/^\w.*$/),
             ]),
         )
-        this.familienstand = new FormControl(this.kunde.familienstand, Validators.required)
+        this.familienstand = new FormControl(
+            this.kunde.familienstand,
+            Validators.required,
+        )
         this.geschlecht = new FormControl(this.kunde.geschlecht)
         this.betrag = new FormControl(this.kunde.betrag)
         this.waehrung = new FormControl(this.kunde.waehrung)
