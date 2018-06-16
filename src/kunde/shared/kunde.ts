@@ -23,33 +23,55 @@ import 'moment/locale/de'
 
 moment.locale('de')
 
-const MIN_RATING = 0
-const MAX_RATING = 5
+const MIN_KATEGORIE = 0
+const MAX_KATEGORIE = 5
 
-export enum Verlag {
-    IWI_VERLAG = 'IWI_VERLAG',
-    HSKA_VERLAG = 'HSKA_VERLAG',
+export enum Geschlecht {
+    WEIBLICH = 'W',
+    MAENNLICH = 'M',
 }
 
-export enum KundeArt {
-    KINDLE = 'KINDLE',
-    DRUCKAUSGABE = 'DRUCKAUSGABE',
+export enum Familienstand {
+    LEDIG = 'L',
+    VERHEIRATET = 'VH',
+    GESCHIEDEN = 'G',
+    VERWITWET = 'VW',
 }
 
+export interface Adresse {
+    plz: string
+    ort: string
+}
+
+export interface Umsatz {
+    betrag: number
+    waehrung: string
+}
+
+export interface User {
+    username: string
+    password: string
+}
 /**
  * Gemeinsame Datenfelder unabh&auml;ngig, ob die Kundedaten von einem Server
  * (z.B. RESTful Web Service) oder von einem Formular kommen.
  */
 export interface KundeShared {
     _id?: string
-    titel?: string
-    verlag?: Verlag
-    art?: KundeArt
-    preis?: number
-    rabatt?: number
-    datum?: string
-    lieferbar?: boolean
+    nachname?: string
     email?: string
+    kategorie?: number
+    newsletter?: boolean
+    geburtsdatum?: Date
+    umsatz?: Umsatz
+    homepage?: string
+    geschlecht?: Geschlecht
+    familienstand?: Familienstand
+    adresse?: Adresse
+    username?: string
+    _links?: SelfLink
+    links?: any
+    user: User
     version?: number
 }
 
@@ -69,9 +91,12 @@ interface SelfLink {
  *       String handhabbar sind.
  * </ul>
  */
+
+ /* ggf. katgeorie, links und _links weg
+ */
 export interface KundeServer extends KundeShared {
-    rating?: number
-    schlagwoerter?: Array<string>
+    kategorie?: number
+    interessen?: Array<string>
     links?: any
     _links?: SelfLink
 }
@@ -84,9 +109,16 @@ export interface KundeServer extends KundeShared {
  * </ul>
  */
 export interface KundeForm extends KundeShared {
-    rating: string
-    javascript?: boolean
-    typescript?: boolean
+    betrag: number
+    waehrung: string
+    plz: string
+    ort: string
+    kategorie: number
+    username: string
+    password: string
+    S?: boolean
+    L?: boolean
+    R?: boolean
 }
 
 /**
@@ -94,44 +126,55 @@ export interface KundeForm extends KundeShared {
  * Functions fuer Abfragen und Aenderungen.
  */
 export class Kunde {
-    ratingArray: Array<boolean> = []
+    betrag: any
+    waehrung: any
+    kategorieArray: Array<boolean> = []
 
     // wird aufgerufen von fromServer() oder von fromForm()
     private constructor(
         // tslint:disable-next-line:variable-name
         public _id: string | undefined,
-        public titel: string | undefined,
-        public rating: number | undefined,
-        public art: KundeArt | undefined,
-        public verlag: Verlag | undefined,
-        public datum: moment.Moment | undefined,
-        public preis: number | undefined,
-        public rabatt: number | undefined,
-        public lieferbar: boolean | undefined,
-        public schlagwoerter: Array<string> | undefined,
+        public nachname: string | undefined,
         public email: string | undefined,
+        public kategorie: number | undefined,
+        public newsletter: boolean | undefined,
+        public geburtsdatum: Date | undefined,
+        public umsatz: Umsatz | undefined,
+        public homepage: string | undefined,
+        public geschlecht: Geschlecht | undefined,
+        public familienstand: Familienstand | undefined,
+        public interessen: Array<string> | undefined,
+        public adresse: Adresse | undefined,
+        public username: string | undefined,
+        public links: any | undefined,
+        public user: User,
         public version: number | undefined,
     ) {
-        this._id = _id
-        this.titel = titel
-        this.rating = rating
-        this.art = art
-        this.verlag = verlag
-        this.datum =
-            datum !== undefined ? datum : moment(new Date().toISOString())
-        this.preis = preis
-        this.rabatt = rabatt
-        this.lieferbar = lieferbar
-
-        this.schlagwoerter =
-            schlagwoerter === undefined
-                ? []
-                : (this.schlagwoerter = schlagwoerter)
-        if (rating !== undefined) {
-            _.times(rating - MIN_RATING, () => this.ratingArray.push(true))
-            _.times(MAX_RATING - rating, () => this.ratingArray.push(false))
+        this._id = _id || undefined
+        this.nachname = nachname || undefined
+        this.email = email || undefined
+        this.kategorie = kategorie || undefined
+        if (kategorie !== undefined) {
+            _.times(kategorie - MIN_KATEGORIE, () =>
+                this.kategorieArray.push(true),
+            )
+            _.times(MAX_KATEGORIE - kategorie, () =>
+                this.kategorieArray.push(false),
+            )
         }
-        this.email = email
+        this.newsletter = newsletter || undefined
+        this.geburtsdatum = geburtsdatum || undefined
+        this.umsatz = umsatz
+        this.homepage = homepage || undefined
+        this.geschlecht = geschlecht || undefined
+        this.familienstand = familienstand || undefined
+        this.interessen =
+            interessen === undefined ? [] : (this.interessen = interessen)
+        this.adresse = adresse || undefined
+        this.username = username || undefined
+        this.links = links || undefined
+        this.user = user || undefined
+        this.version = version || undefined
     }
 
     /**
@@ -162,23 +205,22 @@ export class Kunde {
             version = Number.parseInt(versionStr)
         }
 
-        let datum: moment.Moment | undefined
-        if (kundeServer.datum !== undefined) {
-            datum = moment(kundeServer.datum)
-        }
-
         const kunde = new Kunde(
             id,
-            kundeServer.titel,
-            kundeServer.rating,
-            kundeServer.art,
-            kundeServer.verlag,
-            datum,
-            kundeServer.preis,
-            kundeServer.rabatt,
-            kundeServer.lieferbar,
-            kundeServer.schlagwoerter,
+            kundeServer.nachname,
             kundeServer.email,
+            kundeServer.kategorie,
+            kundeServer.newsletter,
+            kundeServer.geburtsdatum,
+            kundeServer.umsatz,
+            kundeServer.homepage,
+            kundeServer.geschlecht,
+            kundeServer.familienstand,
+            kundeServer.interessen,
+            kundeServer.adresse,
+            kundeServer.username,
+            kundeServer.links,
+            kundeServer.user,
             version,
         )
         console.log('Kunde.fromServer(): kunde=', kunde)
@@ -191,46 +233,52 @@ export class Kunde {
      * @return Das initialisierte Kunde-Objekt
      */
     static fromForm(kundeForm: KundeForm) {
-        const schlagwoerter: Array<string> = []
-        if (kundeForm.javascript === true) {
-            schlagwoerter.push('JAVASCRIPT')
+        const interessen: Array<string> = []
+        if (kundeForm.S === true) {
+            interessen.push('S')
         }
-        if (kundeForm.typescript === true) {
-            schlagwoerter.push('TYPESCRIPT')
+        if (kundeForm.L === true) {
+            interessen.push('L')
+        }
+        if (kundeForm.R === true) {
+            interessen.push('R')
         }
 
-        const datumMoment =
-            kundeForm.datum === undefined ? undefined : moment(kundeForm.datum)
+        const umsatz: Umsatz = {
+            betrag: kundeForm.betrag,
+            waehrung: kundeForm.waehrung,
+        }
 
-        const rabatt =
-            kundeForm.rabatt === undefined ? 0 : kundeForm.rabatt / 100
+        const user: User = {
+            username: kundeForm.username,
+            password: kundeForm.password,
+        }
+
+        const adresse: Adresse = {
+            plz: kundeForm.plz,
+            ort: kundeForm.ort,
+        }
+
         const kunde = new Kunde(
             kundeForm._id,
-            kundeForm.titel,
-            +kundeForm.rating,
-            kundeForm.art,
-            kundeForm.verlag,
-            datumMoment,
-            kundeForm.preis,
-            rabatt,
-            kundeForm.lieferbar,
-            schlagwoerter,
+            kundeForm.nachname,
             kundeForm.email,
+            kundeForm.kategorie,
+            kundeForm.newsletter,
+            kundeForm.geburtsdatum,
+            umsatz,
+            kundeForm.homepage,
+            kundeForm.geschlecht,
+            kundeForm.familienstand,
+            interessen,
+            adresse,
+            kundeForm.username,
+            kundeForm.links,
+            user,
             kundeForm.version,
         )
         console.log('Kunde.fromForm(): kunde=', kunde)
         return kunde
-    }
-
-    // http://momentjs.com
-    get datumFormatted() {
-        return this.datum === undefined
-            ? undefined
-            : this.datum.format('Do MMM YYYY')
-    }
-
-    get datumFromNow() {
-        return this.datum === undefined ? undefined : this.datum.fromNow()
     }
 
     /**
@@ -240,27 +288,27 @@ export class Kunde {
      * @return true, falls der Teilstring im Kundetitel enthalten ist. Sonst
      *         false.
      */
-    containsTitel(titel: string) {
-        return this.titel === undefined
+    containsNachname(nachname: string) {
+        return this.nachname === undefined
             ? false
-            : this.titel.toLowerCase().includes(titel.toLowerCase())
+            : this.nachname.toLowerCase().includes(nachname.toLowerCase())
     }
 
     /**
      * Die Bewertung ("rating") des Kundees um 1 erh&ouml;hen
      */
     rateUp() {
-        if (this.rating !== undefined && this.rating < MAX_RATING) {
-            this.rating++
+        if (this.kategorie !== undefined && this.kategorie < MAX_KATEGORIE) {
+            this.kategorie++
         }
     }
 
     /**
-     * Die Bewertung ("rating") des Kundees um 1 erniedrigen
+     * Die Bewertung ("Kategorie") des Kunden um 1 erniedrigen
      */
     rateDown() {
-        if (this.rating !== undefined && this.rating > MIN_RATING) {
-            this.rating--
+        if (this.kategorie !== undefined && this.kategorie > MIN_KATEGORIE) {
+            this.kategorie--
         }
     }
 
@@ -269,8 +317,8 @@ export class Kunde {
      * @param verlag der Name des Verlags
      * @return true, falls das Kunde dem Verlag zugeordnet ist. Sonst false.
      */
-    hasVerlag(verlag: string) {
-        return this.verlag === verlag
+    hasGeschlecht(geschlecht: string) {
+        return this.geschlecht === geschlecht
     }
 
     /**
@@ -283,34 +331,30 @@ export class Kunde {
      * @param rabatt Der neue Rabatt
      */
     updateStammdaten(
-        titel: string,
-        art: KundeArt,
-        verlag: Verlag,
-        rating: number,
-        datum: moment.Moment | undefined,
-        preis: number | undefined,
-        rabatt: number | undefined,
+        nachname: string,
+        familienstand: Familienstand,
+        geschlecht: Geschlecht,
+        geburtsdatum: Date | undefined,
+        betrag: number,
+        waehrung: string,
     ) {
-        this.titel = titel
-        this.art = art
-        this.verlag = verlag
-        this.rating = rating
-        this.ratingArray = []
-        _.times(rating - MIN_RATING, () => this.ratingArray.push(true))
-        this.datum = datum
-        this.preis = preis
-        this.rabatt = rabatt
+        this.nachname = nachname
+        this.familienstand = familienstand
+        this.geschlecht = geschlecht
+        this.geburtsdatum = geburtsdatum
+        this.betrag = betrag
+        this.waehrung = waehrung
     }
 
     /**
      * Abfrage, ob es zum Kunde auch Schlagw&ouml;rter gibt.
      * @return true, falls es mindestens ein Schlagwort gibt. Sonst false.
      */
-    hasSchlagwoerter() {
-        if (this.schlagwoerter === undefined) {
+    hasInteressen() {
+        if (this.interessen === undefined) {
             return false
         }
-        return this.schlagwoerter.length !== 0
+        return this.interessen.length !== 0
     }
 
     /**
@@ -318,11 +362,11 @@ export class Kunde {
      * @param schlagwort das zu &uuml;berpr&uuml;fende Schlagwort
      * @return true, falls es das Schlagwort gibt. Sonst false.
      */
-    hasSchlagwort(schlagwort: string) {
-        if (this.schlagwoerter === undefined) {
+    hasInteresse(interesse: string) {
+        if (this.interessen === undefined) {
             return false
         }
-        return this.schlagwoerter.includes(schlagwort)
+        return this.interessen.includes(interesse)
     }
 
     /**
@@ -330,13 +374,16 @@ export class Kunde {
      * @param javascript ist das Schlagwort JAVASCRIPT gesetzt
      * @param typescript ist das Schlagwort TYPESCRIPT gesetzt
      */
-    updateSchlagwoerter(javascript: boolean, typescript: boolean) {
-        this.resetSchlagwoerter()
-        if (javascript) {
-            this.addSchlagwort('JAVASCRIPT')
+    updateInteressen(SPORT: boolean, LESEN: boolean, REISEN: boolean) {
+        this.resetInteressen()
+        if (SPORT) {
+            this.addInteresse('S')
         }
-        if (typescript) {
-            this.addSchlagwort('TYPESCRIPT')
+        if (LESEN) {
+            this.addInteresse('L')
+        }
+        if (REISEN) {
+            this.addInteresse('R')
         }
     }
 
@@ -346,22 +393,22 @@ export class Kunde {
      * @return Das JSON-Objekt f&uuml;r den RESTful Web Service
      */
     toJSON(): KundeServer {
-        const datum =
-            this.datum === undefined
-                ? undefined
-                : this.datum.format('YYYY-MM-DD')
         return {
             _id: this._id,
-            titel: this.titel,
-            rating: this.rating,
-            art: this.art,
-            verlag: this.verlag,
-            datum,
-            preis: this.preis,
-            rabatt: this.rabatt,
-            lieferbar: this.lieferbar,
-            schlagwoerter: this.schlagwoerter,
+            nachname: this.nachname,
             email: this.email,
+            kategorie: this.kategorie,
+            newsletter: this.newsletter,
+            geburtsdatum: this.geburtsdatum,
+            umsatz: this.umsatz,
+            homepage: this.homepage,
+            geschlecht: this.geschlecht,
+            familienstand: this.familienstand,
+            interessen: this.interessen,
+            adresse: this.adresse,
+            username: this.username,
+            links: this.links,
+            user: this.user,
         }
     }
 
@@ -369,14 +416,14 @@ export class Kunde {
         return JSON.stringify(this, null, 2)
     }
 
-    private resetSchlagwoerter() {
-        this.schlagwoerter = []
+    private resetInteressen() {
+        this.interessen = []
     }
 
-    private addSchlagwort(schlagwort: string) {
-        if (this.schlagwoerter === undefined) {
-            this.schlagwoerter = []
+    private addInteresse(interesse: string) {
+        if (this.interessen === undefined) {
+            this.interessen = []
         }
-        this.schlagwoerter.push(schlagwort)
+        this.interessen.push(interesse)
     }
 }
