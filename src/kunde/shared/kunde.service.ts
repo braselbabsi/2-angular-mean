@@ -30,7 +30,7 @@ import {EventEmitter, Inject, Injectable} from '@angular/core'
 
 import {ChartConfiguration, ChartDataSets} from 'chart.js'
 import * as _ from 'lodash'
-import * as moment from 'moment'
+// import * as moment from 'moment'
 
 import {BASE_URI, log, PATH_KUNDEN} from '../../shared'
 // Aus SharedModule als Singleton exportiert

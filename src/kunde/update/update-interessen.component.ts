@@ -25,26 +25,27 @@ import {Kunde} from '../shared/kunde'
 import {KundeService} from '../shared/kunde.service'
 
 /**
- * Komponente f&uuml;r das Tag <code>hs-schlagwoerter</code>
+ * Komponente f&uuml;r das Tag <code>hs-interessen</code>
  */
 @Component({
-    selector: 'hs-update-schlagwoerter',
-    templateUrl: './update-schlagwoerter.html',
+    selector: 'hs-update-interessen',
+    templateUrl: './update-interessen.html',
 })
-export class UpdateSchlagwoerterComponent implements OnInit {
-    // <hs-schlagwoerter [kunde]="...">
+export class UpdateInteressenComponent implements OnInit {
+    // <hs-interessen [kunde]="...">
     @Input() kunde!: Kunde
 
     form!: FormGroup
-    javascript!: FormControl
-    typescript!: FormControl
+    S!: FormControl
+    L!: FormControl
+    R!: FormControl
 
     constructor(
         private readonly formBuilder: FormBuilder,
         private readonly kundeService: KundeService,
         private readonly router: Router,
     ) {
-        console.log('UpdateSchlagwoerterComponent.constructor()')
+        console.log('UpdateInteressenComponent.constructor()')
     }
 
     /**
@@ -56,20 +57,23 @@ export class UpdateSchlagwoerterComponent implements OnInit {
         console.log('kunde=', this.kunde)
 
         // Definition und Vorbelegung der Eingabedaten (hier: Checkbox)
-        const hasJavaScript = this.kunde.hasSchlagwort('JAVASCRIPT')
-        this.javascript = new FormControl(hasJavaScript)
-        const hasTypeScript = this.kunde.hasSchlagwort('TYPESCRIPT')
-        this.typescript = new FormControl(hasTypeScript)
+        const hasSport = this.kunde.hasInteresse('S')
+        this.S = new FormControl(hasSport)
+        const hasLesen = this.kunde.hasInteresse('L')
+        this.L = new FormControl(hasLesen)
+        const hasReisen = this.kunde.hasInteresse('R')
+        this.R = new FormControl(hasReisen)
 
         this.form = this.formBuilder.group({
             // siehe ngFormControl innerhalb von @Component({template: `...`})
-            javascript: this.javascript,
-            typescript: this.typescript,
+            S: this.S,
+            L: this.L,
+            R: this.R,
         })
     }
 
     /**
-     * Die aktuellen Schlagwoerter f&uuml;r das angezeigte Kunde-Objekt
+     * Die aktuellen Interessen f&uuml;r das angezeigte Kunde-Objekt
      * zur&uuml;ckschreiben.
      * @return false, um das durch den Button-Klick ausgel&ouml;ste Ereignis
      *         zu konsumieren.
@@ -86,15 +90,12 @@ export class UpdateSchlagwoerterComponent implements OnInit {
             return undefined
         }
 
-        this.kunde.updateSchlagwoerter(
-            this.javascript.value,
-            this.typescript.value,
-        )
+        this.kunde.updateInteressen(this.S.value, this.L.value, this.R.value)
         console.log('kunde=', this.kunde)
 
         const successFn = () => {
             console.log(
-                `UpdateSchlagwoerterComponent: successFn: path: ${HOME_PATH}`,
+                `UpdateInteressenComponent: successFn: path: ${HOME_PATH}`,
             )
             this.router.navigate([HOME_PATH])
         }
@@ -103,10 +104,10 @@ export class UpdateSchlagwoerterComponent implements OnInit {
             errors: {[s: string]: any} | undefined,
         ) => void = (status, errors = undefined) => {
             console.error(
-                `UpdateSchlagwoerterComponent.onUpdate(): errFn(): status: ${status}`,
+                `UpdateInteressenComponent.onUpdate(): errFn(): status: ${status}`,
             )
             console.error(
-                'UpdateSchlagwoerterComponent.onUpdate(): errFn(): errors',
+                'UpdateInteressenComponent.onUpdate(): errFn(): errors',
                 errors,
             )
         }
@@ -119,6 +120,6 @@ export class UpdateSchlagwoerterComponent implements OnInit {
     }
 
     toString() {
-        return 'UpdateSchlagwoerterComponent'
+        return 'UpdateInteressenComponent'
     }
 }

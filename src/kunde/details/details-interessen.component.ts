@@ -23,13 +23,13 @@ import {log} from '../../shared'
  * Komponente f&uuml;r das Tag <code>hs-schlagwoerter</code>
  */
 @Component({
-    selector: 'hs-details-schlagwoerter',
+    selector: 'hs-details-interessen',
     template: `
-        <div class="form-group row" *ngFor="let schlagwort of values">
+        <div class="form-group row" *ngFor="let interesse of values">
             <div class="col col-11">
                 <div class="checkbox">
                     <input type="checkbox" checked disabled class="checkbox">
-                    <label [ngSwitch]="schlagwort">
+                    <label [ngSwitch]="interesse">
                         <span *ngSwitchCase="'JAVASCRIPT'">JavaScript</span>
                         <span *ngSwitchCase="'TYPESCRIPT'">TypeScript</span>
                     </label>
@@ -38,13 +38,13 @@ import {log} from '../../shared'
         </div>
     `,
 })
-export class DetailsSchlagwoerterComponent implements OnInit {
-    // <hs-schlagwoerter [values]="kunde.schlagwoerter">
+export class DetailsInteressenComponent implements OnInit {
+    // <hs-interessen [values]="kunde.interessen">
     // Decorator fuer ein Attribut. Siehe InputMetadata
     @Input() values!: Array<string>
 
     constructor() {
-        console.log('DetailsSchlagwoerterComponent.constructor()')
+        console.log('DetailsInteressenComponent.constructor()')
     }
 
     @log
@@ -53,6 +53,6 @@ export class DetailsSchlagwoerterComponent implements OnInit {
     }
 
     toString() {
-        return 'DetailsSchlagwoerterComponent'
+        return 'DetailsInteressenComponent'
     }
 }

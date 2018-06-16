@@ -36,10 +36,11 @@ export class UpdateStammdatenComponent implements OnInit {
     @Input() kunde!: Kunde
 
     form!: FormGroup
-    titel!: FormControl
-    art!: FormControl
-    verlag!: FormControl
-    rating!: FormControl
+    nachname!: FormControl
+    familienstand!: FormControl
+    geschlecht!: FormControl
+    betrag!: FormControl
+    waehrung!: FormControl
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -58,26 +59,26 @@ export class UpdateStammdatenComponent implements OnInit {
         console.log('kunde=', this.kunde)
 
         // Definition und Vorbelegung der Eingabedaten
-        this.titel = new FormControl(
-            this.kunde.titel,
+        this.nachname = new FormControl(
+            this.kunde.nachname,
             Validators.compose([
                 Validators.required,
                 Validators.minLength(2),
                 Validators.pattern(/^\w.*$/),
             ]),
         )
-        this.art = new FormControl(this.kunde.art, Validators.required)
-        this.verlag = new FormControl(this.kunde.verlag)
-        this.rating = new FormControl(this.kunde.rating)
-        // this.datum = new Control(this.kunde.datum.toISOString())
+        this.familienstand = new FormControl(this.kunde.familienstand, Validators.required)
+        this.geschlecht = new FormControl(this.kunde.geschlecht)
+        this.betrag = new FormControl(this.kunde.betrag)
+        this.waehrung = new FormControl(this.kunde.waehrung)
 
         this.form = this.formBuilder.group({
             // siehe formControlName innerhalb von @Component({template: ...})
-            titel: this.titel,
-            art: this.art,
-            verlag: this.verlag,
-            rating: this.rating,
-            // datum: this.datum
+            nachname: this.nachname,
+            familienstand: this.familienstand,
+            geschlecht: this.geschlecht,
+            betrag: this.betrag,
+            waehrung: this.waehrung,
         })
     }
 
@@ -101,13 +102,12 @@ export class UpdateStammdatenComponent implements OnInit {
 
         // rating, preis und rabatt koennen im Formular nicht geaendert werden
         this.kunde.updateStammdaten(
-            this.titel.value,
-            this.art.value,
-            this.verlag.value,
-            this.rating.value,
-            this.kunde.datum,
-            this.kunde.preis,
-            this.kunde.rabatt,
+            this.nachname.value,
+            this.familienstand.value,
+            this.geschlecht.value,
+            this.kunde.geburtsdatum,
+            this.betrag.value,
+            this.waehrung.value,
         )
         console.log('kunde=', this.kunde)
 

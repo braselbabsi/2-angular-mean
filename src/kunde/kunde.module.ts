@@ -23,8 +23,8 @@ import {SharedModule} from '../shared/shared.module'
 
 import {CreateKundeComponent} from './create/create-kunde.component'
 import {CreateKundeGuard} from './create/create-kunde.guard'
+import {DetailsInteressenComponent} from './details/details-interessen.component'
 import {DetailsKundeComponent} from './details/details-kunde.component'
-import {DetailsSchlagwoerterComponent} from './details/details-schlagwoerter.component'
 import {DetailsStammdatenComponent} from './details/details-stammdaten.component'
 import {BalkendiagrammComponent} from './diagramme/balkendiagramm.component'
 import {LiniendiagrammComponent} from './diagramme/liniendiagramm.component'
@@ -33,8 +33,8 @@ import {KundeService} from './shared/kunde.service'
 import {SucheKundenComponent} from './suche/suche-kunden.component'
 import {SuchergebnisComponent} from './suche/suchergebnis.component'
 import {SuchformularComponent} from './suche/suchformular.component'
+import {UpdateInteressenComponent} from './update/update-interessen.component'
 import {UpdateKundeComponent} from './update/update-kunde.component'
-import {UpdateSchlagwoerterComponent} from './update/update-schlagwoerter.component'
 import {UpdateStammdatenComponent} from './update/update-stammdaten.component'
 
 const komponentenExport: Array<Type<any>> = [
@@ -48,12 +48,12 @@ const komponentenExport: Array<Type<any>> = [
 ]
 
 const komponentenIntern: Array<Type<any>> = [
-    DetailsSchlagwoerterComponent,
+    DetailsInteressenComponent,
     DetailsStammdatenComponent,
     SucheKundenComponent,
     SuchergebnisComponent,
     SuchformularComponent,
-    UpdateSchlagwoerterComponent,
+    UpdateInteressenComponent,
     UpdateStammdatenComponent,
 ]
 
