@@ -177,8 +177,7 @@ export class KundeService {
         // Gibt es ein gepuffertes Kunde mit der gesuchten ID und Versionsnr.?
         if (
             this._kunde !== undefined &&
-            this._kunde._id === id &&
-            this._kunde.version !== undefined
+            this._kunde._id === id
         ) {
             console.log('KundeService.findById(): Kunde gepuffert')
             this.kundeEmitter.emit(this._kunde)
@@ -194,22 +193,13 @@ export class KundeService {
 
         // Statuscode 2xx
         const nextFn: ((
-            response: HttpResponse<KundeServer>,
+            response: KundeServer,
         ) => void) = response => {
-            const {headers, body} = response
-            const etag = headers.get('ETag')
-            console.debug(`KundeService.findById(): nextFn(): ETag=${etag}`)
-
-            if (body === null || etag === null) {
-                console.error('Response-Body oder ETag ist null')
-                return
-            }
-
-            this._kunde = Kunde.fromServer(body, etag)
-            console.debug('KundeService.findById(): nextFn():', this._kunde)
+            this._kunde = Kunde.fromServer(response)
             this.kundeEmitter.emit(this._kunde)
         }
 
+        // Ggf. noch anpassen
         const errorFn: (err: HttpErrorResponse) => void = err => {
             if (err.error instanceof ProgressEvent) {
                 console.error(
@@ -230,7 +220,7 @@ export class KundeService {
 
         console.log('KundeService.findById(): GET-Request')
         this.httpClient
-            .get<KundeServer>(uri, {observe: 'response'})
+            .get<KundeServer>(uri)
             .subscribe(nextFn, errorFn)
     }
 
@@ -246,8 +236,6 @@ export class KundeService {
         successFn: (location: string | undefined) => void,
         errorFn: (status: number, errors: {[s: string]: any}) => void,
     ) {
-        // Alternative:date-fns
-        neuesKunde.datum = moment(new Date())
 
         const nextFn: ((response: HttpResponse<string>) => void) = response => {
             console.debug('KundeService.save(): nextFn(): response', response)
@@ -265,7 +253,7 @@ export class KundeService {
                 )
             } else {
                 if (errorFn !== undefined) {
-                    // z.B. {titel: ..., verlag: ..., email: ...}
+                    // z.B. {Nachname: ..., Geschlecht: ..., email: ...}
                     errorFn(err.status, err.error)
                 } else {
                     console.error('errorFnPost', err)
@@ -299,7 +287,7 @@ export class KundeService {
     ) {
         const {version} = kunde
         if (version === undefined) {
-            console.error(`Keine Versionsnummer fuer das Kunde ${kunde._id}`)
+            console.error(`Keine Versionsnummer fuer den Kunden ${kunde._id}`)
             return
         }
         const errorFnPut: ((err: HttpErrorResponse) => void) = err => {
@@ -385,7 +373,7 @@ export class KundeService {
         const nextFn: ((kunden: Array<KundeServer>) => void) = kunden => {
             const labels = kunden.map(kunde => this.setKundeId(kunde))
             console.log('KundeService.createBarChart(): labels: ', labels)
-            const ratingData = kunden.map(kunde => kunde.rating) as Array<
+            const kategorieData = kunden.map(kunde => kunde.kategorie) as Array<
                 number
             >
 
@@ -396,7 +384,7 @@ export class KundeService {
             // n3-chart:      http://n3-charts.github.io/line-chart
 
             const datasets: Array<ChartDataSets> = [
-                {label: 'Bewertung', data: ratingData},
+                {label: 'Kategorie', data: kategorieData},
             ]
             const config: ChartConfiguration = {
                 type: 'bar',
@@ -419,12 +407,12 @@ export class KundeService {
         const nextFn: ((kunden: Array<KundeServer>) => void) = kunden => {
             const labels = kunden.map(kunde => this.setKundeId(kunde))
             console.log('KundeService.createLinearChart(): labels: ', labels)
-            const ratingData = kunden.map(kunde => kunde.rating) as Array<
+            const kategorieData = kunden.map(kunde => kunde.kategorie) as Array<
                 number
             >
 
             const datasets: Array<ChartDataSets> = [
-                {label: 'Bewertung', data: ratingData},
+                {label: 'Bewertung', data: kategorieData},
             ]
 
             const config: ChartConfiguration = {
@@ -449,11 +437,11 @@ export class KundeService {
         const nextFn: ((kunden: Array<KundeServer>) => void) = kunden => {
             const labels = kunden.map(kunde => this.setKundeId(kunde))
             console.log('KundeService.createLinearChart(): labels: ', labels)
-            const ratingData = kunden.map(kunde => kunde.rating) as Array<
+            const kategorieData = kunden.map(kunde => kunde.kategorie) as Array<
                 number
             >
 
-            const anzahl = ratingData.length
+            const anzahl = kategorieData.length
             const backgroundColor = new Array<string>(anzahl)
             const hoverBackgroundColor = new Array<string>(anzahl)
             _.times(anzahl, i => {
@@ -467,7 +455,7 @@ export class KundeService {
                 labels,
                 datasets: [
                     {
-                        data: ratingData,
+                        data: kategorieData,
                         backgroundColor,
                         hoverBackgroundColor,
                     },
@@ -494,30 +482,31 @@ export class KundeService {
     private suchkriterienToHttpParams(suchkriterien: KundeForm): HttpParams {
         let httpParams = new HttpParams()
 
-        if (suchkriterien.titel !== undefined && suchkriterien.titel !== '') {
-            httpParams = httpParams.set('titel', suchkriterien.titel)
+        if (suchkriterien.nachname !== undefined && suchkriterien.nachname !== '') {
+            httpParams = httpParams.set('nachname', suchkriterien.nachname)
         }
-        if (suchkriterien.art !== undefined) {
-            const value = suchkriterien.art as string
-            httpParams = httpParams.set('art', value)
+        if (suchkriterien.familienstand !== undefined) {
+            const value = suchkriterien.familienstand as string
+            httpParams = httpParams.set('familienstand', value)
         }
-        if (suchkriterien.rating !== undefined) {
-            const value = suchkriterien.rating.toString()
-            httpParams = httpParams.set('rating', value)
+        if (suchkriterien.geschlecht !== undefined) {
+            const value = suchkriterien.geschlecht.toString()
+            httpParams = httpParams.set('geschlecht', value)
         }
-        if (
+        /*
+        if (suchkriterien.kategorie !== undefined) {
+            const value = suchkriterien.kategorie.toString()
+            httpParams = httpParams.set('kategorie', value)
+        }
+        */
+        /* if (
             suchkriterien.verlag !== undefined &&
             suchkriterien.verlag.length !== 0
         ) {
             const value = suchkriterien.verlag as string
             httpParams = httpParams.set('verlag', value)
         }
-        if (suchkriterien.javascript === true) {
-            httpParams = httpParams.set('javascript', 'true')
-        }
-        if (suchkriterien.typescript === true) {
-            httpParams = httpParams.set('typescript', 'true')
-        }
+        */
         return httpParams
     }
 
