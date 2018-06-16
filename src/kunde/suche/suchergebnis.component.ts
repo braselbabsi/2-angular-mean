@@ -92,9 +92,7 @@ export class SuchergebnisComponent implements OnInit {
             console.error(`Fehler beim Loeschen: status=${status}`)
         this.kundeService.remove(kunde, successFn, errorFn)
         if (this.kunden.length !== 0) {
-            this.kunden = this.kunden.filter(
-                (b: Kunde) => b._id !== kunde._id,
-            )
+            this.kunden = this.kunden.filter((b: Kunde) => b._id !== kunde._id)
         }
     }
 
@@ -151,7 +149,7 @@ export class SuchergebnisComponent implements OnInit {
 
             switch (err) {
                 case 404:
-                    this.errorMsg = 'Keine Bücher gefunden.'
+                    this.errorMsg = 'Es wurden keine Kunden gefunden.'
                     break
                 default:
                     this.errorMsg = 'Ein Fehler ist aufgetreten.'

@@ -92,7 +92,7 @@ interface SelfLink {
  * </ul>
  */
 
- /* ggf. katgeorie, links und _links weg
+/* ggf. katgeorie, links und _links weg
  */
 export interface KundeServer extends KundeShared {
     kategorie?: number

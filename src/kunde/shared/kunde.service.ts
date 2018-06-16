@@ -175,10 +175,7 @@ export class KundeService {
     @log
     findById(id: string) {
         // Gibt es ein gepuffertes Kunde mit der gesuchten ID und Versionsnr.?
-        if (
-            this._kunde !== undefined &&
-            this._kunde._id === id
-        ) {
+        if (this._kunde !== undefined && this._kunde._id === id) {
             console.log('KundeService.findById(): Kunde gepuffert')
             this.kundeEmitter.emit(this._kunde)
             return
@@ -192,9 +189,7 @@ export class KundeService {
         const uri = `${this.baseUriKunden}/${id}`
 
         // Statuscode 2xx
-        const nextFn: ((
-            response: KundeServer,
-        ) => void) = response => {
+        const nextFn: ((response: KundeServer) => void) = response => {
             this._kunde = Kunde.fromServer(response)
             this.kundeEmitter.emit(this._kunde)
         }
@@ -219,9 +214,7 @@ export class KundeService {
         }
 
         console.log('KundeService.findById(): GET-Request')
-        this.httpClient
-            .get<KundeServer>(uri)
-            .subscribe(nextFn, errorFn)
+        this.httpClient.get<KundeServer>(uri).subscribe(nextFn, errorFn)
     }
 
     /**
@@ -236,7 +229,6 @@ export class KundeService {
         successFn: (location: string | undefined) => void,
         errorFn: (status: number, errors: {[s: string]: any}) => void,
     ) {
-
         const nextFn: ((response: HttpResponse<string>) => void) = response => {
             console.debug('KundeService.save(): nextFn(): response', response)
             const {headers} = response
@@ -482,7 +474,10 @@ export class KundeService {
     private suchkriterienToHttpParams(suchkriterien: KundeForm): HttpParams {
         let httpParams = new HttpParams()
 
-        if (suchkriterien.nachname !== undefined && suchkriterien.nachname !== '') {
+        if (
+            suchkriterien.nachname !== undefined &&
+            suchkriterien.nachname !== ''
+        ) {
             httpParams = httpParams.set('nachname', suchkriterien.nachname)
         }
         if (suchkriterien.familienstand !== undefined) {
