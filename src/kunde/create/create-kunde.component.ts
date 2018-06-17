@@ -44,33 +44,39 @@ export class CreateKundeComponent implements OnInit {
     //    serverseitig mittels Request/Response
     //    clientseitig bei den Ereignissen keyup, change, ...
     // Ein Endbenutzer bewirkt staendig einen neuen Fehlerstatus
-    readonly titel: FormControl = new FormControl(undefined, [
+    readonly nachname: FormControl = new FormControl(undefined, [
         Validators.required,
         Validators.minLength(2),
         Validators.pattern(/^\w.*$/),
     ])
-    readonly rating: FormControl = new FormControl(undefined)
-    readonly art: FormControl = new FormControl('DRUCKAUSGABE')
-    readonly verlag: FormControl = new FormControl(
+    readonly kategorie: FormControl = new FormControl(undefined)
+    readonly newsletter: FormControl = new FormControl(false)
+    readonly geburtsdatum: FormControl = new FormControl(undefined)
+    readonly umsatz: FormControl = new FormControl(undefined)
+    readonly betrag: FormControl = new FormControl(0)
+    readonly waehrung: FormControl = new FormControl('EUR')
+    readonly homepage: FormControl = new FormControl(undefined)
+    readonly geschlecht: FormControl = new FormControl(
         undefined,
         Validators.required,
     )
-    readonly preis: FormControl = new FormControl(
-        undefined,
-        Validators.required,
-    )
-    readonly rabatt: FormControl = new FormControl(
-        undefined,
-        Validators.required,
-    )
-    readonly datum: FormControl = new FormControl(undefined)
-    readonly lieferbar: FormControl = new FormControl(false)
-    readonly javascript: FormControl = new FormControl(false)
-    readonly typescript: FormControl = new FormControl(false)
     readonly email: FormControl = new FormControl(undefined, [
         Validators.required,
         Validators.email,
     ])
+
+    readonly familienstand: FormControl = new FormControl('Ledig')
+    readonly L: FormControl = new FormControl(false)
+    readonly S: FormControl = new FormControl(false)
+    readonly R: FormControl = new FormControl(false)
+    readonly adresse: FormControl = new FormControl(undefined)
+    readonly plz: FormControl = new FormControl(undefined)
+    readonly ort: FormControl = new FormControl(undefined)
+    readonly username: FormControl = new FormControl(undefined)
+    readonly password: FormControl = new FormControl(undefined)
+    readonly _LINKS: FormControl = new FormControl(undefined)
+    readonly links: FormControl = new FormControl(undefined)
+    readonly user: FormControl = new FormControl(undefined)
 
     showWarning = false
     fertig = false
@@ -94,17 +100,28 @@ export class CreateKundeComponent implements OnInit {
     ngOnInit() {
         this.form = this.formBuilder.group({
             // siehe formControlName innerhalb @Component({template: ...})
-            titel: this.titel,
-            rating: this.rating,
-            art: this.art,
-            verlag: this.verlag,
-            preis: this.preis,
-            rabatt: this.rabatt,
-            datum: this.datum,
-            lieferbar: this.lieferbar,
-            javascript: this.javascript,
-            typescript: this.typescript,
+            nachname: this.nachname,
             email: this.email,
+            kategorie: this.kategorie,
+            newsletter: this.newsletter,
+            geburtsdatum: this.geburtsdatum,
+            umsatz: this.umsatz,
+            betrag: this.betrag,
+            waehrung: this.waehrung,
+            homepage: this.homepage,
+            geschlecht: this.geschlecht,
+            familienstand: this.familienstand,
+            S: this.S,
+            L: this.L,
+            R: this.R,
+            adresse: this.adresse,
+            plz: this.plz,
+            ort: this.ort,
+            username: this.username,
+            password: this.password,
+            _LINKS: this._LINKS,
+            links: this.links,
+            user: this.user,
         })
 
         this.titleService.setTitle('Neuer Kunde')
@@ -131,8 +148,8 @@ export class CreateKundeComponent implements OnInit {
             return false
         }
 
-        const neuesKunde = Kunde.fromForm(this.form.value)
-        console.log('neuesKunde=', neuesKunde)
+        const neuerKunde = Kunde.fromForm(this.form.value)
+        console.log('neuerKunde=', neuerKunde)
 
         const successFn: (location: string | undefined) => void = location => {
             console.log(
@@ -152,7 +169,7 @@ export class CreateKundeComponent implements OnInit {
             console.error(`CreateKunde.onSave(): errorFn(): status: ${status}`)
             console.error('CreateKunde.onSave(): errorFn(): errors', errors)
         }
-        this.kundeService.save(neuesKunde, successFn, errorFn)
+        this.kundeService.save(neuerKunde, successFn, errorFn)
 
         // damit das (Submit-) Ereignis konsumiert wird und nicht an
         // uebergeordnete Eltern-Komponenten propagiert wird bis zum Refresh
