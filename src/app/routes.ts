@@ -31,7 +31,7 @@ import {AdminGuard} from '../auth/admin.guard'
 import {HomeComponent} from '../home/home.component'
 
 export const HOME_PATH = 'home'
-export const DETAILS_BUCH_PATH = 'details'
+export const DETAILS_KUNDE_PATH = 'details'
 
 // https://angular.io/docs/ts/latest/guide/router.html
 /**
@@ -43,7 +43,7 @@ const routes: Routes = [
 
     {path: 'suche', component: SucheKundenComponent},
     // id als Pfad-Parameter
-    {path: `${DETAILS_BUCH_PATH}/:id`, component: DetailsKundeComponent},
+    {path: `${DETAILS_KUNDE_PATH}/:id`, component: DetailsKundeComponent},
     {
         path: 'update/:id',
         component: UpdateKundeComponent,
