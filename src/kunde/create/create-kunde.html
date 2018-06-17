@@ -40,7 +40,7 @@
                     <span class="alert alert-warning">
                         <i class="fas fa-2x fa-exclamation-triangle"></i>
                         <strong class="text-help ml-1">
-                            Wenn Sie die Seite jetzt verlassen, verlieren Sie Ihre eingegebenen Daten.
+                            Wenn Sie die Seite verlassen, verlieren Sie Ihre eingegebenen Daten.
                         </strong>
                     </span>
                 </div>
@@ -59,7 +59,7 @@
                         <div *ngIf="nachname.errors !== null && nachname.errors.required">
                             <i class="fas fa-exclamation-circle"></i>
                             <span class="ml-1">
-                                Ein Nachname muss eingegeben werden.
+                                Nachname ist ein Pflichtfeld.
                             </span>
                         </div>
                         <div *ngIf="nachname.errors !== null && nachname.errors.minlength">
@@ -81,7 +81,7 @@
 
             <div class="form-group row">
                 <label for="plzInput" class="col col-2 form-control-label">
-                    Postleitzahl *
+                    PLZ *
                 </label>
                 <div class="col col-2">
                     <input id="plzInput" placeholder="Plz" class="form-control"
@@ -91,13 +91,13 @@
                         <div *ngIf="plz.errors !== null && plz.errors.required">
                             <i class="fas fa-exclamation-circle"></i>
                             <span class="ml-1">
-                                Eine Postleitzahl muss eingegeben werden.
+                                Postleitzahl ist ein Pflichtfeld
                             </span>
                         </div>
                         <div *ngIf="plz.errors !== null && plz.errors.minlength">
                             <i class="fas fa-exclamation-circle"></i>
                             <span class="ml-1">
-                                Eine Postleizahl muss 5 Zeichen lang sein.
+                                Eine Postleizahl muss genau 5 Zeichen lang sein.
                             </span>
                         </div>
                         <div *ngIf="plz.errors !== null && plz.errors.pattern">
@@ -119,7 +119,7 @@
                             <div *ngIf="ort.errors !== null && ort.errors.required">
                                 <i class="fas fa-exclamation-circle"></i>
                                 <span class="ml-1">
-                                    Ein Ort muss eingegeben werden.
+                                    Ort ist ein Pflichtfeld
                                 </span>
                             </div>
                             <div *ngIf="ort.errors !== null && ort.errors.minlength">
@@ -150,7 +150,7 @@
                         <div *ngIf="email.errors !== null && email.errors.required">
                             <i class="fas fa-exclamation-circle"></i>
                             <span class="ml-1">
-                                Eine Emailadresse muss eingegeben werden.
+                                EMailadresse ist ein Pflichtfeld
                             </span>
                         </div>
                         <div *ngIf="email.errors !== null && email.errors.email">
@@ -168,18 +168,12 @@
                 <div class="col col-10">
                     <select class="form-control" formControlName="kategorie">
                         <option value="">Kategorie ausw&auml;hlen</option>
-                        <optgroup label="Hoch">
-                            <option value="5">5</option>
-                        </optgroup>
-                        <optgroup label="Mittel">
-                            <option value="4">4</option>
-                            <option value="3">3</option>
-                        </optgroup>
-                        <optgroup label="Niedrig">
-                            <option value="2">2</option>
-                            <option value="1">1</option>
-                        </optgroup>
-                </select>
+                        <option value="5">5</option>
+                        <option value="4">4</option>
+                        <option value="3">3</option>
+                        <option value="2">2</option>
+                        <option value="1">1</option>
+                    </select>
                 </div>
             </div>
 
@@ -190,7 +184,7 @@
                         <input type="radio" id="MAENNLICHInput"
                             formControlName="geschlecht" name="geschlecht" value="M">
                         <label class="radio-inline" for="MAENNLICHInput">
-                            Männlich
+                            M&auml;nnlich
                         </label>
                     </div>
                     <div class="radio">
@@ -208,17 +202,17 @@
                 <div class="col col-10">
                     <select class="form-control" formControlName="familienstand"
                         required [class.border-danger]="familienstand.invalid && familienstand.touched">
-                        <option value="">Einen Familienstand ausw&auml;hlen</option>
-                        <option value="L">Ledig</option>
-                        <option value="VH">Verheiratet</option>
-                        <option value="G">Geschieden</option>
-                        <option value="VW">Verwittwet</option>
+                        <option value="">Familienstand ausw&auml;hlen</option>
+                        <option value="Ledig">Ledig</option>
+                        <option value="Verheiratet">Verheiratet</option>
+                        <option value="Geschieden">Geschieden</option>
+                        <option value="Verwitwet">Verwitwet</option>
                     </select>
                     <div *ngIf="familienstand.invalid && familienstand.touched" class="alert alert-danger">
                         <div *ngIf="familienstand.errors !== null && familienstand.errors.required">
                             <i class="fas fa-exclamation-circle"></i>
                             <span class="ml-1">
-                                Eine Angabe des Familienstandes ist erforderlich.
+                                Der Familienstand ist ein Pflichtfeld
                             </span>
                         </div>
                     </div>
@@ -250,9 +244,6 @@
                             required [class.border-danger]="waehrung.invalid && waehrung.touched">
                             <option value="EUR">Euro</option>
                             <option value="USD">USDollar</option>
-                            <option value="GBP">Pfund</option>
-                            <option value="JPY">YEN</option>
-                            <option value="CHF">Schweizer Franken</option>
                         </select>
                     </div>
             </div>
@@ -293,7 +284,7 @@
 
 
             <div class="form-group row">
-                    <label class="col col-2 form-control-label">Möchten Sie sich bei unserem Newsletter anmelden? *</label>
+                    <label class="col col-2 form-control-label">Newsletter abonnieren *</label>
                     <div class="col col-10">
                         <div class="radio">
                             <input type="radio" id="jaInput"
@@ -366,6 +357,6 @@
             </div>
         </form>
 
-        <small>* sind Pflichtfelder</small>
+        <small>Mit * markierte Felder sind Pflichtfelder und m&uuml;ssen bef&uuml;llt werden.</small>
     </div>
 </div>
