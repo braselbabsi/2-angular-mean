@@ -40,7 +40,7 @@
                     <span class="alert alert-warning">
                         <i class="fas fa-2x fa-exclamation-triangle"></i>
                         <strong class="text-help ml-1">
-                            Wenn Sie die Seite jetzt verlassen, verlieren Sie Ihre eingegebenen Daten.
+                            Wenn Sie diese Seite verlassen, verlieren Sie Ihre eingegebenen Daten.
                         </strong>
                     </span>
                 </div>
@@ -168,17 +168,11 @@
                 <div class="col col-10">
                     <select class="form-control" formControlName="kategorie">
                         <option value="">Kategorie ausw&auml;hlen</option>
-                        <optgroup label="Hoch">
                             <option value="5">5</option>
-                        </optgroup>
-                        <optgroup label="Mittel">
                             <option value="4">4</option>
                             <option value="3">3</option>
-                        </optgroup>
-                        <optgroup label="Niedrig">
                             <option value="2">2</option>
                             <option value="1">1</option>
-                        </optgroup>
                 </select>
                 </div>
             </div>
@@ -208,7 +202,7 @@
                 <div class="col col-10">
                     <select class="form-control" formControlName="familienstand"
                         required [class.border-danger]="familienstand.invalid && familienstand.touched">
-                        <option value="">Einen Familienstand ausw&auml;hlen</option>
+                        <option value="">Familienstand ausw&auml;hlen</option>
                         <option value="L">Ledig</option>
                         <option value="VH">Verheiratet</option>
                         <option value="G">Geschieden</option>
@@ -231,7 +225,7 @@
                 </label>
                 <div class="col col-5">
                     <div class="input-group">
-                        <input id="umsatzInput" placeholder="Umsatz, z.B. 123.45"
+                        <input id="umsatzInput" placeholder="Jahresumsatz, z.B. 123.45"
                             required class="form-control" type="number" formControlName="umsatz"
                             [class.border-danger]="umsatz.invalid && umsatz.touched">
                         <span class="input-group-addon">&#x20ac;</span>
@@ -249,10 +243,7 @@
                         <select class="form-control" formControlName="waehrung"
                             required [class.border-danger]="waehrung.invalid && waehrung.touched">
                             <option value="EUR">Euro</option>
-                            <option value="USD">USDollar</option>
-                            <option value="GBP">Pfund</option>
-                            <option value="JPY">YEN</option>
-                            <option value="CHF">Schweizer Franken</option>
+                            <option value="USD">US Dollar</option>
                         </select>
                     </div>
             </div>
@@ -293,7 +284,7 @@
 
 
             <div class="form-group row">
-                    <label class="col col-2 form-control-label">Möchten Sie sich bei unserem Newsletter anmelden? *</label>
+                    <label class="col col-2 form-control-label">Newsletter abonnieren *</label>
                     <div class="col col-10">
                         <div class="radio">
                             <input type="radio" id="jaInput"
@@ -324,7 +315,7 @@
                             <div *ngIf="username.errors !== null && username.errors.required">
                                 <i class="fas fa-exclamation-circle"></i>
                                 <span class="ml-1">
-                                    Bitte geben Sie ihren Benutzername ein!
+                                    Bitte geben Sie ihren gewünschten Benutzername ein!
                                 </span>
                             </div>
                         </div>
@@ -343,7 +334,7 @@
                             <div *ngIf="password.errors !== null && password.errors.required">
                                 <i class="fas fa-exclamation-circle"></i>
                                 <span class="ml-1">
-                                    Bitte geben Sie ihr Passwort ein!
+                                    Bitte geben Sie ihr gewünschtes Passwort ein!
                                 </span>
                             </div>
                         </div>
