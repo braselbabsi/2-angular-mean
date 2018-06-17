@@ -29,7 +29,7 @@ import {KundeService} from '../shared/kunde.service'
 /**
  * Komponente f&uuml;r das Tag <code>hs-suchergebnis</code>, um zun&auml;chst
  * das Warten und danach das Ergebnis der Suche anzuzeigen, d.h. die gefundenen
- * B&uuml;cher oder eine Fehlermeldung.
+ * Kunden oder eine Fehlermeldung.
  */
 @Component({
     selector: 'hs-suchergebnis',
@@ -102,7 +102,7 @@ export class SuchergebnisComponent implements OnInit {
 
     /**
      * Methode, um den injizierten <code>KundeService</code> zu beobachten,
-     * ob es gefundene bzw. darzustellende B&uuml;cher gibt, die in der
+     * ob es gefundene bzw. darzustellende Kunden gibt, die in der
      * Kindkomponente f&uuml;r das Tag <code>gefundene-kunden</code>
      * dargestellt werden. Diese private Methode wird in der Methode
      * <code>ngOnInit</code> aufgerufen.
