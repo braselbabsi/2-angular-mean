@@ -228,7 +228,6 @@
                         <input id="umsatzInput" placeholder="Jahresumsatz, z.B. 123.45"
                             required class="form-control" type="number" formControlName="umsatz"
                             [class.border-danger]="umsatz.invalid && umsatz.touched">
-                        <span class="input-group-addon">&#x20ac;</span>
                     </div>
                     <div *ngIf="umsatz.invalid && umsatz.touched" class="alert alert-danger">
                         <div *ngIf="umsatz.errors !== null && umsatz.errors.required">
