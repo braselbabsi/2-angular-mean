@@ -44,6 +44,8 @@
                             <th>ID</th>
                             <th>Nachname</th>
                             <th>Geschlecht</th>
+                            <th>Adresse</th>
+                            <th>E-Mail</th>
                             <th>Familienstand</th>
                             <th>Interessen</th>
                             <th>
@@ -66,14 +68,16 @@
                             (click)="onSelect(b)" [@easeOut]="'in'">
                             <td>{{ i + 1 }}</td>
                             <td>{{ b._id }}</td>
-                            <td>{{ b.titel }}</td>
+                            <td>{{ b.nachname }}</td>
                             <td>
                                 <span [ngSwitch]="b.geschlecht">
-                                    <span *ngSwitchCase="'M'">M&uuml;nnlich</span>
+                                    <span *ngSwitchCase="'M'">Maennlich</span>
                                     <span *ngSwitchCase="'W'">Weiblich</span>
                                     <span *ngSwitchDefault>unbekannt</span>
                                 </span>
                             </td>
+                            <td>{{ b.adresse.plz}}   {{ b.adresse.ort}}</td>
+                            <td>{{ b.email }}</td>
                             <td>
                                 <span [ngSwitch]="b.familienstand">
                                     <span *ngSwitchCase="'Ledig'">Ledig</span>
