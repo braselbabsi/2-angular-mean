@@ -1,0 +1,160 @@
+<!--
+   Copyright (C) 2015 - 2018 Juergen Zimmermann, Hochschule Karlsruhe
+
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<div class="card" [@fadeIn]="'in'">
+    <div class="card-header bg-primary">
+        <i class="fas fa-search"></i>
+        <span class="ml-1 font-weight-bold">
+            Eingabe der Suchkriterien
+        </span>
+    </div>
+    <div class="card-body">
+        <!-- Bootstrap:
+                (xs):    -  480px ("extra small")
+                sm:      -  767px ("small")
+                md:  768 -  991px ("medium")
+                lg:  992 - 1199px ("large")
+                xl: 1200 px       ("extra large")
+            CSS-Klassen von Bootstrap:
+                card-..., form-..., row, btn, bg-primary, ...
+                https://getbootstrap.com/docs/4.0/components/forms
+        -->
+
+        <!-- Formulare zur Interaktion mit dem Endbenutzer:
+             * Daten werden modifiziert, z.B. in Suchfelder oder
+               Erfassungs-/Aenderungsformularen
+             * Aenderungen wirken sich auf Teile der Seite aus:
+               Ergebnisse/Fehler anzeigen, Navigationsmoeglichkeiten
+             * Eingaben werden validiert
+
+             Template-Syntax:, z.B. (submit)="onFind()" fuer Output (= Event Binding)
+             d.h. Angular registriert einen "DOM Event Listener" fuer das Ereignis
+             "submit" und ruft die Methode onFind() der Komponentenklasse,
+             wenn das Ereignis eintritt.
+
+             Definition von Attributnamen gemaess HTML: Attribute names must
+             consist of one or more characters other than the space characters,
+             U+0000 NULL, """, "'", ">", "/", "=", the control characters,
+             and any characters that are not defined by Unicode.
+
+             Das FormsModule (s. Re-Export in SharedModule) stellt ngModel bereit.
+        -->
+
+        <form (submit)="onFind()" role="form">
+            <div class="form-group row">
+                <label for="nachnameInput" class="col col-2 form-control-label">
+                    Nachname
+                </label>
+                <div class="col col-10">
+                    <!-- type="search" funktioniert nicht mit Bootstrap -->
+                    <input id="nachnameInput"
+                        placeholder="Gib den Nachnamen oder einen Teil des Nachnamens ein"
+                        class="form-control" [(ngModel)]="nachname" name="nachname">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col col-2 form-control-label">Geschlecht</label>
+                <div class="col col-10">
+                    <select class="form-control" [(ngModel)]="geschlecht" name="geschlecht">
+                        <option value=""></option>
+                        <option value="M">M&auml;nnlich</option>
+                        <option value="W">Weiblich</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col col-2 form-control-label">Familienstand</label>
+                <div class="col col-10">
+                    <div class="radio">
+                        <input type="radio" id="ledigInput"
+                            [(ngModel)]="familienstand" name="familienstand" value="L">                            <label class="radio-inline" for="ledigInput">
+                                Ledig
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <input type="radio" id="geschiedenInput"
+                            [(ngModel)]="familienstand" name="familienstand" value="G">                            <label class="radio-inline" for="geschiedenInput">
+                                Geschieden
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <input type="radio" id="verheiratetInput"
+                            [(ngModel)]="familienstand" name="familienstand" value="VH">
+                        <label class="radio-inline" for="verheiratetInput">
+                            Verheiratet
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <input type="radio" id="verwitwetInput"
+                            [(ngModel)]="familienstand" name="familienstand" value="VW">
+                        <label class="radio-inline" for="verwitwetInput">
+                            Verwitwet
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col col-2 form-control-label">
+                        Interessen
+                </label>
+                <div class="col col-10">
+                    <div class="checkbox">
+                        <input type="checkbox" id="SInput"
+                            [(ngModel)]="S" name="S"/>
+                        <label for="SInput">
+                            Sport
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" id="LInput"
+                            [(ngModel)]="L" name="L"/>
+                        <label for="LInput">
+                            Lesen
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" id="RInput"
+                            [(ngModel)]="R" name="R"/>
+                        <label for="RInput">
+                            Reisen
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col offset-2">
+                    <i class="fas fa-info-circle"></i>
+                    Hinweis: Keine Eingabe liefert alle Kunden zu&uuml;ck
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col offset-2">
+                    <!-- default: type="submit" -->
+                    <button class="btn btn-primary">
+                        <i class="fas fa-search"></i>
+                        <!-- margin left -->
+                        <span class="ml-1">Suchen</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
